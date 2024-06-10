@@ -4,8 +4,8 @@
   <ShortName>Unraid Docs</ShortName>
   <Description>Search Unraid Docs</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">https://docs.unraid.net/zh/img/favicon.svg</Image>
-  <Url type="text/html" method="get" template="https://docs.unraid.net/zh/search?q={searchTerms}"/>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://docs.unraid.net/zh/opensearch.xml" />
-  <moz:SearchForm>https://docs.unraid.net/zh/</moz:SearchForm>
+  <Image width="16" height="16" type="image/x-icon">https://uw1yks.github.io/unraid-docs/zh/img/favicon.svg</Image>
+  <Url type="text/html" method="get" template="https://uw1yks.github.io/unraid-docs/zh/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://uw1yks.github.io/unraid-docs/zh/opensearch.xml" />
+  <moz:SearchForm>https://uw1yks.github.io/unraid-docs/zh/</moz:SearchForm>
 </OpenSearchDescription>
