@@ -1,0 +1,15 @@
+Diese Methode ist ideal für Benutzer, die einen einfachen Weg suchen, um einen Datenträger zu entfernen.
+
+1. **Stoppen Sie das Array:** Beginnen Sie damit, das Array anzuhalten, um die Festplatte sicher zu entfernen.
+2. **(Optional) Dokumentieren Sie Ihre Plattenzuordnungen:** Ziehen Sie in Betracht, einen Screenshot Ihrer aktuellen Plattenzuordnungen auf der Hauptregisterkarte zu erstellen.
+3. **Setzen Sie die Array-Konfiguration zurück:** Verwenden Sie die [Array-Konfiguration zurücksetzen](#reset-the-array-configuration) Anweisung. Wählen Sie unbedingt die Option, alle aktuellen Zuordnungen beizubehalten.
+4. **Weisen Sie den Datenträger ab:** Identifizieren Sie den Datenträger, den Sie entfernen möchten, und weisen Sie ihn ab.
+5. **Starten Sie das Array:** Starten Sie das Array nach dem Abweisen des Datenträgers erneut, aber markieren Sie nicht das Feld „Parität ist gültig“.
+
+Wenn Sie das Array starten, wird eine %%parity|parity%% Synchronisierung eingeleitet, wenn Sie ein %%parity disk|parity-drives%% zugewiesen haben. Beachten Sie, dass das Array bis zum Abschluss dieser Synchronisierung anfällig für Datenverlust ist.
+
+:::tip
+
+Verschieben Sie wichtige Daten vor der Entfernung von der Festplatte. Der %%parity|parity%% Synchronisierungsprozess kann je nach Festplattengröße und Systemaktivität mehrere Stunden dauern.
+
+:::

@@ -1,0 +1,12 @@
+En **mode appareil unique**, votre %%cache pool|cache-pool%% consiste en un seul appareil. Cela signifie :
+
+- **Pas de redondance :** Si l'appareil échoue, toutes les données qui y sont stockées et qui n'ont pas été transférées vers votre %%array|array%% seront perdues.
+- **Options de système de fichiers :** Vous pouvez utiliser des systèmes de fichiers autres que %%BTRFS|btrfs%%, comme %%XFS|xfs%% ou %%ZFS|zfs%%.
+
+:::important
+
+Si vous choisissez un système de fichiers non-%%BTRFS|btrfs%% ou non-%%ZFS|zfs%% en mode mono-dispositif et décidez ensuite d'ajouter plus de dispositifs au pool, vous devrez d'abord reformater le dispositif en %%BTRFS|btrfs%% ou %%ZFS|zfs%%. C'est pourquoi %%BTRFS|btrfs%% est le système de fichiers par défaut pour les %%cache pools|cache-pool%%, même lorsque vous utilisez un seul dispositif. Les systèmes %%BTRFS|btrfs%% et %%ZFS|zfs%% permettent d'ajouter des dispositifs pour créer des pools en miroir par la suite. Pour plus d'informations sur la sélection et la compatibilité des systèmes de fichiers, consultez [File systems](../file-systems.mdx).
+
+:::
+
+Le mode simple appareil est simple. Vous pouvez facilement ajouter ou retirer l'appareil, mais vous n'aurez pas d'options pour des fonctionnalités avancées comme la redondance ou l'expansion.

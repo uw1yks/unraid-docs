@@ -1,0 +1,247 @@
+---
+sidebar_position: 3
+sidebar_label: Verwalten und Anpassen von Containern
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import DockerNetworkType from './partials/managing-and-customizing-containers/network-type.mdx';
+import DockerVolumeMappings from './partials/managing-and-customizing-containers/volume-mappings.mdx';
+import DockerPortMappings from './partials/managing-and-customizing-containers/port-mappings.mdx';
+import DockerEnvironmentVariables from './partials/managing-and-customizing-containers/environment-variables.mdx';
+import DockerCommandStart from './partials/managing-and-customizing-containers/command-start.mdx';
+import DockerCommandStop from './partials/managing-and-customizing-containers/command-stop.mdx';
+import DockerCommandRestart from './partials/managing-and-customizing-containers/command-restart.mdx';
+import DockerCommandStatus from './partials/managing-and-customizing-containers/command-status.mdx';
+import DockerCommandLogs from './partials/managing-and-customizing-containers/command-logs.mdx';
+
+# Verwalten und Anpassen von Containern
+
+:::caution\[Disclaimer]
+
+Diese Seite wurde erstellt, um Benutzern aller Fähigkeitsstufen zu helfen, Docker-Container auf Unraid OS optimal zu nutzen. Die Tipps und Best Practices stammen vom Unraid-Team, das sicherstellt, dass sie auf die Bedürfnisse der meisten Benutzer zugeschnitten sind. Bedenken Sie jedoch, dass sich Docker ständig weiterentwickelt. Daher ist es immer eine gute Idee, die [offizielle Docker-Dokumentation](https://docs.docker.com/) zu konsultieren, um die neuesten Funktionen, erweiterte Konfigurationen oder Problemlösungen zu finden, die über die Abdeckung von Unraid hinausgehen.
+
+:::
+
+Bevor Sie einen Docker-Container in Unraid anpassen, ist es hilfreich, die grundlegenden Konfigurationsoptionen zu verstehen. Jedes [Containervorlage](./community-applications.mdx) bietet eine benutzerfreundliche Oberfläche zur Einrichtung von Netzwerk, Speicher und Umgebungsvariablen, sodass Sie das Verhalten des Containers Ihren Bedürfnissen anpassen können, ohne komplexe Befehlszeilenwerkzeuge zu verwenden.
+
+<Tabs>
+  <TabItem value="Netzwerk-Typ" label="Netzwerktyp" default>
+    <DockerNetworkType />
+  </TabItem>
+
+  <TabItem value="Volumen-Zuordnungen" label="Lautstärkezuordnungen">
+    <DockerVolumeMappings />
+  </TabItem>
+
+  <TabItem value="Port-Zuordnungen" label="Portzuordnungen">
+    <DockerPortMappings />
+  </TabItem>
+
+  <TabItem value="Umgebungsvariablen" label="Umgebungsvariablen">
+    <DockerEnvironmentVariables />
+  </TabItem>
+</Tabs>
+
+## Container erstellen und starten
+
+Sobald Sie das Netzwerk, die Volumen-Zuordnungen, die Port-Zuordnungen und die Umgebungsvariablen Ihres Containers konfiguriert haben, sind Sie bereit, Ihren Docker-Container zu erstellen und zu starten. Dieser Abschnitt führt Sie durch den Erstellungsprozess, erklärt, wie Sie die Startreihenfolge und Abhängigkeiten verwalten und gibt Tipps für die erweiterte Startanpassung.
+
+### Container erstellen
+
+Nachdem Sie Ihre Konfigurationseinstellungen in der Container-Vorlage überprüft haben:
+
+1. Klicken Sie auf **Erstellen**, um den Download zu starten und den Container einzurichten.
+   - Vermeiden Sie es, Ihr Browserfenster zu schließen oder die Seite zu wechseln, bis der Prozess abgeschlossen ist.
+   - Der erste Download eines neuen Repositories kann länger dauern als nachfolgende Downloads.
+2. Sobald der Prozess abgeschlossen ist, klicken Sie auf **Fertig**, um zur Docker-Seite zurückzukehren, wo Sie weitere Container verwalten oder hinzufügen können.
+
+### Startreihenfolge planen
+
+Einige Container sind von anderen abhängig, um korrekt zu funktionieren. Beispielsweise könnte eine Anwendung zuerst einen Datenbankcontainer benötigen, oder ein Dienst könnte einen [%%VPN|vpn-tunnel%%-Container](../../system-administration/secure-your-server/tailscale.mdx) aktiviert haben müssen, bevor er startet.
+
+:::important[Plan Ihren Start]
+
+- Identifizieren Sie Container, die grundlegende Dienste bieten (wie Datenbanken, %%VPNs|vpn-tunnel%% oder Speichergateways).
+- Stellen Sie sicher, dass abhängige Container erst gestartet werden, nachdem ihre Voraussetzungen laufen und bereit sind.
+- Überprüfen Sie die Dokumentation für jeden Container, um spezifische Startanforderungen zu verstehen.
+  :::
+
+:::
+
+---
+
+## Erweiterter Container-Start
+
+Unraid bietet Ihnen flexible Kontrolle darüber, welche Container automatisch und in welcher Reihenfolge starten. Dies ist besonders nützlich, wenn Sie Container haben, die von anderen abhängig sind (wie ein Datenbank- oder %%VPN|vpn-tunnel%%-Dienst).
+
+Um sicherzustellen, dass ein Container automatisch startet, wenn das %%array|array%% startet:
+
+1. Gehen Sie auf der %%WebGUI|web-gui%%-Karte zur **Docker**-Registerkarte.
+2. Schalten Sie den **Automatisch-Starten**-Schalter auf **EIN** für jeden Container, den Sie automatisch starten möchten.
+
+### Anpassung der Startreihenfolge und Verzögerungen
+
+Standardmäßig startet Unraid alle Autostart-Container so schnell wie möglich in der Reihenfolge, in der sie auf der Docker-Registerkarte erscheinen. Sie können diese Reihenfolge anpassen und Wartezeiten zwischen den Container-Starts hinzufügen:
+
+1. Auf der **Docker**-Registerkarte entsperren Sie die Container-Liste mit dem Vorhängeschloss-Symbol.
+2. Ziehen und ablegen, um die Reihenfolge der Container zu ändern.
+3. Wechseln Sie oben rechts mit dem Schalter zur **Erweiterten Ansicht**.
+4. Geben Sie in der **AutoStart**-Spalte eine Wartezeit (in Sekunden) in das **Warte**-Feld für alle Container ein, die zusätzliche Zeit benötigen, bevor der nächste startet.
+   - Benutzen Sie Versuch und Irrtum, um die besten Wartezeiten für Ihr Setup zu bestimmen.
+
+:::tip
+
+Während Unraid keine spezielle "Test-Startsequenz"-Funktion besitzt, können Sie Ihre Startreihenfolge simulieren und überprüfen:
+
+:::
+
+### Testen Ihrer Startsequenz
+
+Während Unraid keine spezielle "Test-Startsequenz"-Funktion besitzt, können Sie Ihre Startreihenfolge simulieren und überprüfen:
+
+1. Aus allen Containern von der **Docker**-Registerkarte stoppen.
+2. Starten Sie jeden Container manuell in der geplanten Reihenfolge mit dem **Start**-Knopf.
+3. Überwachen Sie die Containerprotokolle und das Anwendungsverhalten, um sicherzustellen, dass die Abhängigkeiten erfüllt sind und die Dienste wie erwartet initialisieren.
+4. Passen Sie bei Bedarf die Startreihenfolge oder die Wartezeiten an.
+
+:::important
+
+Um auf das Kontextmenü des Containers zuzugreifen, wechseln Sie zur **Docker**- oder **Dashboard**-Registerkarte und klicken auf das Container-Icon, das Sie verwalten möchten. Dieses Menü bietet einfachen Zugriff auf häufige Aktionen:
+
+:::
+
+---
+
+## Gesundheitsindikator
+
+Sobald Sie Ihren Docker-Container erstellt und gestartet haben, ist die Verwaltung über die %%WebGUI|web-gui%% einfach. Dieser Leitfaden erläutert die Verwendung des Kontextmenüs, das Verständnis von Container-Gesundheitsindikatoren und den Zugriff auf Volumen-Zuordnungen innerhalb Ihres Containers.
+
+Um auf das Kontextmenü des Containers zuzugreifen, wechseln Sie zur **Docker**- oder **Dashboard**-Registerkarte und klicken auf das Container-Icon, das Sie verwalten möchten. Dieses Menü bietet einfachen Zugriff auf häufige Aktionen:
+
+<div style={{ margin: 'auto', maxWidth: '286px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+  ![Docker-Leitfaden - Steuerung](/img/Dockerguide-controlling.png)
+</div>
+
+| Option            | Beschreibung                                                                                                                     |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **WebUI**         | Öffnet die Webschnittstelle des Containers in einem neuen Browser-Tab (falls verfügbar).                                         |
+| **Konsole**       | Öffnet eine Kommandozeilenschnittstelle, um direkt mit dem Container zu interagieren.                                            |
+| **Stopp**         | Stoppt den laufenden Container.                                                                                                  |
+| **Pause**         | Pausiert den Container und hält vorübergehend alle Prozesse an.                                                                  |
+| **Neustart**      | Startet den Container neu und wendet alle Konfigurationsänderungen an.                                                           |
+| **Protokolle**    | Zeigt die Protokollausgabe des Containers zur Fehlerbehebung an.                                                                 |
+| **Bearbeiten**    | Ändern Sie die Container-Einstellungen, wie Port- oder Volumen-Zuordnungen. Änderungen werden sofort nach dem Speichern wirksam. |
+| **Entfernen**     | Löscht den Container. Sie können auswählen, nur den Container zu entfernen oder auch dessen Image zu löschen.                    |
+| **Projektseite**  | Öffnet die Projektseite des Containers für Dokumentation und Support.                                                            |
+| **Support**       | Bietet Zugang zu Hilfs- und Unterstützungsressourcen für den Container.                                                          |
+| **Weitere Infos** | Zeigt zusätzliche Informationen über den Container und seine Konfiguration an.                                                   |
+
+### Volume-Mappings innerhalb eines Containers
+
+Beim Konfigurieren Ihrer Anwendung über ihre Weboberfläche beziehen Sie sich auf den **Container-Pfad**, den Sie während der Konfiguration eingerichtet haben - nicht den Host-Pfad.
+
+- 🟢 **Gesund**: Zeigt an, dass der Container läuft und wie erwartet reagiert.
+- 🟡 **Ungesund**: Der Container läuft, hat aber seine Gesundheitsprüfung nicht bestanden. Untersuchen Sie die Protokolle oder Container-Einstellungen für weitere Informationen.
+- ⚪ **Keine Gesundheitsprüfung**: Dies bedeutet, dass keine Gesundheitsprüfung für den Container konfiguriert ist. Das ist bei vielen Apps üblich und nicht unbedingt ein Problem.
+
+:::note
+
+Hier sind einige Beispiele für häufige Pfadzuordnungskonfigurationen, die Benutzer häufig benötigen, wenn sie Docker-Container einrichten. Sie zeigen, wie man zwischen dem Host-Dateisystem-Pfad von Unraid und den internen Pfaden des Containers übersetzt, um Anwendungen korrekt zu konfigurieren.
+
+:::
+
+---
+
+## Volume-Mappings innerhalb eines Containers
+
+Beim Konfigurieren Ihrer Anwendung über ihre Weboberfläche beziehen Sie sich auf den **Container-Pfad**, den Sie während der Konfiguration eingerichtet haben - nicht den Host-Pfad.
+
+Unraid unterstützt nativ keine zeitgesteuerten Start- oder Stopp-Aktionen für **Docker-Container**, aber Sie können diesen Prozess ganz einfach mit dem [**User Scripts plugin**](../customize-your-experience/plugins.mdx) automatisieren. Dieses leistungsstarke Tool ermöglicht es Ihnen, benutzerdefinierte Skripte nach einem Zeitplan auszuführen, sodass Sie Ihre Container automatisch steuern können.
+
+<h3>Beispielszenarien</h3>
+
+Hier sind einige Beispiele für häufige Pfadzuordnungskonfigurationen, die Benutzer häufig benötigen, wenn sie Docker-Container einrichten. Sie zeigen, wie man zwischen dem Host-Dateisystem-Pfad von Unraid und den internen Pfaden des Containers übersetzt, um Anwendungen korrekt zu konfigurieren.
+
+- **Medienserver:**
+  Host-Pfad: `/mnt/user/media`\
+  Container-Pfad: `/unraid_media`
+
+  Stellen Sie in der App den Speicherort Ihrer Medienbibliothek auf `/unraid_media` ein.
+
+- Greifen Sie über ***Einstellungen → Benutzerskripte*** darauf zu, um Ihre Skripte zu erstellen und zu verwalten.
+
+  Verwenden Sie in der App `/config` für die Konfigurationsspeicherung.
+
+- **Multiple %%user shares|user-share%%:**
+  Host path: `/mnt/user/media` → Container path: `/media`\
+  Host path: `/mnt/user/data` → Container path: `/data`
+
+  Verweisen Sie in der Anwendung bei Bedarf auf `/media` oder `/data`.
+
+:::important[Best Praxis]
+
+Verwenden Sie immer den restriktivsten [Zugriffsmodus](../manage-storage/shares.mdx) (nur lesen oder lesen/schreiben), der Ihren Container ordnungsgemäß funktionieren lässt.
+
+:::
+
+---
+
+## Planung von Start und Stopp
+
+Unraid unterstützt nativ keine zeitgesteuerten Start- oder Stopp-Aktionen für **Docker-Container**, aber Sie können diesen Prozess ganz einfach mit dem [**User Scripts plugin**](../customize-your-experience/plugins.mdx) automatisieren. Dieses leistungsstarke Tool ermöglicht es Ihnen, benutzerdefinierte Skripte nach einem Zeitplan auszuführen, sodass Sie Ihre Container automatisch steuern können.
+
+### Benutzerskripte-Plugin
+
+Das **User Scripts plugin** ermöglicht es Ihnen, benutzerdefinierte Shell-Skripte direkt über die %%WebGUI|web-gui%% zu erstellen, zu verwalten und zu planen. Sie können es für verschiedene Automatisierungsaufgaben verwenden, z. B. zum Starten oder Stoppen von Containern, zum Sichern von Daten oder zum Ausführen von Wartungsroutinen.
+
+- Installieren Sie das Plugin über die **Apps**-Registerkarte, wenn Sie dies noch nicht getan haben.
+- Greifen Sie über ***Einstellungen → Benutzerskripte*** darauf zu, um Ihre Skripte zu erstellen und zu verwalten.
+
+Um mehr über Plugins zu erfahren, schauen Sie sich [Plugins](../customize-your-experience/plugins.mdx) an.
+
+### Planung von Containeraktionen
+
+Um das Starten oder Stoppen Ihrer Container nach einem Zeitplan zu automatisieren:
+
+1. Installieren Sie das **Benutzer-Skripte Plugin** aus dem **Apps**-Tab.
+2. Navigieren Sie zu ***Einstellungen → Benutzer-Skripte***.
+3. Erstellen Sie ein neues Skript für jeden einzigartigen Zeitplan. Sie können Befehle für mehrere Container in einem einzigen Skript einschließen, wenn sie denselben Zeitplan teilen.
+4. Legen Sie den Zeitplan mit dem Dropdown-Menü fest oder verwenden Sie einen benutzerdefinierten `cron`-Ausdruck für komplexere Zeitoptionen.
+5. Klicken Sie auf **Anwenden**, um Ihr Skript zu speichern und zu aktivieren.
+
+:::tip
+
+Cron-Ausdrücke ermöglichen eine flexible Planung über die integrierten Optionen hinaus. Beispielsweise führt `0 3 * * 1` Ihr Skript jeden Montag um 3:00 Uhr aus.
+
+:::
+
+### Befehl Beispiele
+
+<Tabs>
+  <TabItem value="start" label="Container starten" default>
+    <DockerCommandStart />
+  </TabItem>
+
+  <TabItem value="stoppen" label="Container stoppen">
+    <DockerCommandStop />
+  </TabItem>
+
+  <TabItem value="neustart" label="Container neu starten">
+    <DockerCommandRestart />
+  </TabItem>
+
+  <TabItem value="status" label="Containerstatus überprüfen">
+    <DockerCommandStatus />
+  </TabItem>
+
+  <TabItem value="protokolle" label="Containerprotokolle anzeigen">
+    <DockerCommandLogs />
+  </TabItem>
+</Tabs>
+
+:::tip
+
+Sie finden den Containernamen auf dem Docker-Tab oder indem Sie den `docker run`-Befehl im Konfigurationsbildschirm des Containers anzeigen.
+
+:::

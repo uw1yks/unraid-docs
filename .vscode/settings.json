@@ -1,0 +1,21 @@
+{
+    "cSpell.words": [
+        "Adaptec",
+        "apcupsd",
+        "ipvlan",
+        "macvlan",
+        "macvtap",
+        "nchan",
+        "Realtek",
+        "Tailnet",
+        "Tailscale",
+        "Unraid",
+        "Userspace"
+    ],
+    "cSpell.customDictionaries": {
+
+    },
+    "files.associations": {
+        "*.mdx": "markdown"
+    }
+}

@@ -1,0 +1,404 @@
+---
+sidebar_position: 3
+sidebar_label: Caches temporaires
+---
+
+import RemoveDiskGui from './partials/remove-disk-gui.mdx';
+import RemoveDiskCommandLine from './partials/remove-disk-command-line.mdx';
+import PoolSingleDeviceMode from './partials/pool-single-device-mode.mdx';
+import PoolMultiDeviceMode from './partials/pool-multi-device-mode.mdx';
+import MovePoolToArray from './partials/move-pool-to-array.mdx';
+import MoveArrayToPool from './partials/move-array-to-pool.mdx';
+import MoveBetweenPoolsUsingMover from './partials/move-between-pools-using-mover.mdx';
+import MoveBetweenPoolsManual from './partials/move-between-pools-manual.mdx';
+
+# Caches temporaires
+
+Dans Unraid, un %%cache pool|cache-pool%% est une collection d'un ou plusieurs disques, généralement des SSD ou des HDD haute-vitesse. Ces disques stockent temporairement des données avant qu'elles ne soient déplacées vers votre [%%array|array%%](/unraid-os/using-unraid-to/manage-storage/array/overview) principal. Utiliser des %%cache pools|cache-pool%% peut améliorer significativement les vitesses d'écriture, protéger vos données, et fournir un stockage dédié pour certaines tâches comme l'exécution de conteneurs Docker ou [%%machines virtuelles|vm%%](../create-virtual-machines/overview-and-system-prep.mdx).
+
+Les %%Cache pools|cache-pool%% offrent plusieurs avantages, ce qui en fait un ajout précieux à votre configuration Unraid, tels que :
+
+1. **Vitesses d'écriture plus rapides :** Les %%Cache pools|cache-pool%% vous permettent d'écrire rapidement des données sur des disques plus rapides avant qu'elles ne soient transférées vers le %%array|array%% principal. Cela améliore considérablement la performance perçue lors de l'enregistrement de fichiers.
+
+2. **Protection des données pour les fichiers en cache :** En utilisant plusieurs disques dans un %%cache pool|cache-pool%% (en les configurant par exemple en %%RAID 1|raid1%%), vous ajoutez de la redondance. Cela signifie que vos données en cache sont protégées contre la défaillance d'un disque avant même qu'elles atteignent l'%%array|array%% principal.
+
+3. **Stockage optimisé pour les applications :** Stocker des applications comme des conteneurs Docker ou des %%machines virtuelles|vm%% sur un %%cache temporaire|cache-pool%% améliore leur performance, réduit l'usure de votre %%array|array%% principal et minimise le temps nécessaire pour accéder aux fichiers fréquemment utilisés.
+
+4. **Stockage flexible et dédié :** Avec plusieurs %%cache pools|cache-pool%%, vous pouvez assigner des pools spécifiques pour différentes tâches. Par exemple, vous pourriez avoir un pool dédié aux téléchargements et un autre aux %%machines virtuelles|vm%%, réduisant ainsi la concurrence pour les ressources et améliorant l'efficacité.
+
+:::info[Keep [En connaissance de cause]
+
+- **Multiples pools :** Vous pouvez créer et nommer différents %%caches temporaires|cache-pool%%, les adaptant à vos besoins spécifiques.
+- **SSD vs. HDD :** Les SSD sont excellents pour la vitesse, tandis que vous pouvez utiliser les HDD pour des charges de travail de données séquentielles et volumineuses. De plus, les HDD peuvent aider à prolonger la durée de vie de vos SSD.
+- **La redondance est importante :** Pour protéger vos données, utilisez plus d'un disque dans un %%cache pool|cache-pool%%. Un pool à disque unique ne vous protégera pas d'une éventuelle défaillance de disque.
+- **Choix du système de fichiers :** Le système de fichiers par défaut pour les %%cache pools|cache-pool%% est %%BTRFS|btrfs%%, qui prend en charge divers options de %%RAID|raid%% pour une redondance et une flexibilité accrues. Pour plus de détails sur la sélection de systèmes de fichiers, consultez [Systèmes de fichiers](./file-systems.mdx).
+- **Intégration avec le %%Mover|mover%% :** Les données écrites sur un %%cache pool|cache-pool%% sont automatiquement transférées vers votre %%array|array%% principal selon un calendrier que vous définissez. Cela garde vos [%%user shares|user-share%%](./shares.mdx) organisées et faciles à gérer.
+- **Performance des applications :** En plaçant les conteneurs Docker, les données des applications et les disques de %%machines virtuelles|vm%% sur un %%cache temporaire|cache-pool%%, vous améliorez la vitesse d'accès et réduisez la charge sur votre stockage principal.
+
+:::
+
+---
+
+## Modes de pool
+
+Unraid %%cache pools|cache-pool%% peuvent fonctionner en deux modes principaux: **mode appareil unique** et **mode multi-appareils**. Connaître la différence entre ces modes vous aidera à trouver le bon équilibre entre performance, flexibilité et protection des données pour vos besoins.
+
+### Mode dispositif unique
+
+<PoolSingleDeviceMode />
+
+### Mode multi-appareils
+
+<PoolMultiDeviceMode />
+
+Les tâches courantes pour le %%cache temporaire|cache-pool%% incluent :
+
+- Basculer entre les modes appareil unique et multi-appareil
+- Ajout de disques à un pool
+- Remplacer des disques dans un pool
+- Déplacement de fichiers entre le pool et l'%%array|array%% (voir [Déplacement de fichiers entre un pool et l'array](#moving-files-between-a-pool-and-the-array))
+
+---
+
+## Passer au mode Multi-Appareils
+
+Les %%Cache pools|cache-pool%% dans Unraid peuvent être étendus d'un appareil unique à plusieurs appareils, permettant d'augmenter la capacité et la redondance. Pour profiter du mode multi-appareils, votre pool doit être formaté en %%BTRFS|btrfs%% ou %%ZFS|zfs%%.
+
+### Converting a pool to BTRFS or ZFS {#converting-a-pool-to-btrfs-or-zfs}
+
+Si votre %%cache pool|cache-pool%% n'est pas encore formaté en %%BTRFS|btrfs%% ou %%ZFS|zfs%%, vous pouvez le convertir en suivant les étapes suivantes.
+
+Pour convertir un pool en BTRFS ou ZFS :
+
+1. Sauvegardez le contenu important. Voir [Déplacement de fichiers entre un pool et l'array](#moving-files-between-a-pool-and-the-array) pour déplacer des fichiers de votre pool vers l'%%array|array%%.
+2. Arrêtez le %%array|array%%.
+3. Dans l'onglet **Main**, cliquez sur le pool et sélectionnez **BTRFS** ou **ZFS** comme format de système de fichiers.
+4. Démarrez l’%%array|array%%.
+5. Lorsque le pool apparaît comme **non montable**, confirmez et cliquez sur **Format**.
+6. Après le formatage, vous aurez un pool %%BTRFS|btrfs%% ou %%ZFS|zfs%% (appareil unique à ce stade).
+7. (Optionnel) Ajoutez des disques supplémentaires au besoin.
+8. Restaurez vos données en déplaçant les fichiers vers le pool.
+
+### Ajout de disques pour créer un pool multi-appareils
+
+Une fois que votre pool est formaté en %%BTRFS|btrfs%% ou %%ZFS|zfs%%, vous pouvez ajouter d'autres disques pour la redondance et pour étendre le stockage. Pour des instructions détaillées sur l'ajout de disques à des pools existants, voir [Ajouter des disques à un pool](#adding-disks-to-a-pool).
+
+Pour ajouter plus de disques pour la redondance :
+
+1. Arrêtez le %%array|array%%.
+2. Dans l'onglet **Main**, attribuez un ou plusieurs nouveaux appareils à votre pool.
+3. Démarrez l’%%array|array%%.
+4. Unraid intègre automatiquement les nouveaux appareils et démarre un **équilibrage** (%%BTRFS|btrfs%%) ou **resilver** (%%ZFS|zfs%%).
+5. Dans l'onglet **Main**, cliquez sur le premier appareil du pool et vérifiez le **Statut d'équilibrage** (%%BTRFS|btrfs%%) ou le **statut zpool** (%%ZFS|zfs%%) pour suivre la progression.
+6. Une fois terminé, le pool fonctionne en **mode multi-appareils** avec une capacité et une redondance améliorées.
+
+:::tip
+
+Si votre %%cache temporaire|cache-pool%% n'est pas déjà formaté en %%BTRFS|btrfs%% ou %%ZFS|zfs%%, suivez ces étapes simples :
+
+:::
+
+---
+
+## Ajout de disques à un pool {#adding-disks-to-a-pool}
+
+Pour ajouter plus de disques pour la redondance :
+
+:::note
+
+Si vous souhaitez ajouter des disques à votre pool, assurez-vous que votre pool est déjà formaté en %%BTRFS|btrfs%% ou %%ZFS|zfs%%. Si ce n'est pas le cas, vous devrez le formater d'abord, comme expliqué dans [Conversion d'un pool en BTRFS ou ZFS](#converting-a-pool-to-btrfs-or-zfs).
+
+:::
+
+### Ajout de disques à un pool
+
+Pour ajouter un disque à un pool %%BTRFS|btrfs%% :
+
+1. Arrêtez le %%array|array%%.
+2. Dans l'onglet **Main**, ouvrez le pool.
+3. Dans la section **Périphériques de la piscine**, réglez **Emplacements** sur le nombre exact de dispositifs supplémentaires.
+4. Attribuez les nouveaux appareils aux emplacements disponibles.
+5. Démarrez l'%%array|array%% pour activer les modifications.
+
+:::note
+
+Après le démarrage du %%array|array%%, %%BTRFS|btrfs%% commence automatiquement une opération de **Équilibrage** pour redistribuer les données entre tous les appareils du pool. Ce processus peut prendre plusieurs heures voire des jours, selon la taille de votre pool et la quantité de données stockées. Pendant ce temps, votre pool peut sembler occupé, mais vous pouvez continuer à l'utiliser normalement. Vous pouvez suivre la progression de l'équilibrage dans l'onglet **Principal** en cliquant sur le premier dispositif du pool et en vérifiant le **Statut d'équilibrage**.
+
+:::
+
+### Pools ZFS {#btrfs-pools}
+
+Removing a disk from a %%BTRFS|btrfs%% or %%ZFS|zfs%% multi-device %%cache pool|cache-pool%% can help you reclaim hardware, replace a failing drive, or reconfigure your storage. This process is only possible if your pool is set up for redundancy (like %%RAID 1|raid1%% for both data and metadata) and the remaining devices have enough space to hold all of your data.
+
+- **Pools RAIDZ1/2/3 simples-vdev :** Un pool avec un groupe de disques en configuration RAIDZ. Peut être étendu un disque à la fois. Voir [Extension RAIDZ](#raidz-expansion) ci-dessous.
+- **Pools en miroir :** Un pool où les disques sont jumelés ensemble en miroirs. Peut ajouter des paires de miroirs supplémentaires pour augmenter la capacité.
+- **Pools multi-vdev :** Un pool avec plusieurs groupes de disques (par exemple, plusieurs groupes RAIDZ ou plusieurs paires de miroirs). Ne peut pas être étendu en ajoutant des disques individuels à des groupes existants.
+
+:::important
+
+Tous les pools %%ZFS|zfs%% ne peuvent pas être étendus en ajoutant des dispositifs. Seuls les pools RAIDZ1/2/3 simples-vdev permettent une extension disque par disque. Les autres configurations de pool nécessitent l'ajout de vdevs complets, comme l'ajout d'une nouvelle paire miroir à un pool en miroir ou l'ajout d'un nouveau vdev de la même largeur à un pool RAIDZ.
+
+:::
+
+:::tip[Planning pour une extension future]
+
+Si vous créez un nouveau pool %%ZFS|zfs%% de deux disques et envisagez de l'étendre plus tard en ajoutant des disques un par un, choisissez **RAIDZ1** lors de la configuration initiale au lieu de la configuration miroir par défaut. Alors que les pools à deux disques par défaut sont en miroir (ce qui offre une redondance), choisir RAIDZ1 vous permet d'étendre le pool progressivement à l'avenir sans migrer vos données. Si vous ne prévoyez pas d'étendre au-delà de deux disques, la configuration miroir par défaut est recommandée pour sa simplicité et ses performances.
+
+:::
+
+#### Extension RAIDZ {#raidz-expansion}
+
+À partir d'Unraid 7.2, vous pouvez étendre des pools RAIDZ1/2/3 simples-vdev disque par disque. Cette fonctionnalité vous permet d'augmenter la capacité de votre pool progressivement sans reconstruire l'ensemble du pool.
+
+Pour étendre un pool RAIDZ simple-vdev :
+
+1. Avec le %%array|array%% en cours d'exécution, dans ***Principal → Périphériques de la piscine***, sélectionnez le nom du pool pour voir les détails.
+2. Dans la zone **Statut du Pool**, vérifiez l'existence d'un bouton **Mettre à jour le Pool**. Si c'est le cas, vous devrez cliquer dessus avant de continuer. Notez qu'une mise à jour du pool limitera votre capacité à revenir aux versions précédentes d'Unraid.
+3. Arrêtez le %%array|array%%.
+4. Sur ***Principal → Périphériques de la piscine***, ajoutez un emplacement au pool.
+5. Sélectionnez le disque approprié (doit être au moins aussi grand que le plus petit disque du pool).
+6. Démarrez l’%%array|array%%.
+
+:::caution
+
+Si vous voyez un avertissement "expansion invalide", le pool doit d'abord être mis à jour à l'aide du bouton **Mettre à jour le Pool** mentionné à l'étape 2.
+
+:::
+
+---
+
+## Retirer des disques d'un pool
+
+Retirer un disque d'un %%BTRFS|btrfs%% ou %%ZFS|zfs%% multi-appareils %%cache pool|cache-pool%% peut vous aider à récupérer du matériel, remplacer un disque défaillant ou reconfigurer votre stockage. Ce processus n'est possible que si votre pool est configuré pour la redondance (comme %%RAID 1|raid1%% pour les données et les métadonnées) et que les appareils restants ont suffisamment d'espace pour contenir toutes vos données.
+
+### Via le WebGUI
+
+<RemoveDiskGui />
+
+### Utilisation de la ligne de commande (Avancé)
+
+<RemoveDiskCommandLine />
+
+### Changer les niveaux de RAID de la pool {#changing-pool-raid-levels}
+
+%%BTRFS|btrfs%% provides the ability to change %%RAID|raid%% levels for %%cache pools|cache-pool%% dynamically, allowing you to adjust settings without stopping the %%array|array%% or losing any data. This flexibility lets you optimize for performance, redundancy, or storage efficiency as your requirements change. For information on adding disks to %%BTRFS|btrfs%% pools, see [BTRFS pools](#btrfs-pools).
+
+<h4>Niveaux de %%RAID|raid%% pris en charge</h4>
+
+| Niveau %%RAID\|raid%% | Protection des données | Efficacité de l'espace | Cas d'utilisation                                                                                                 |
+| --------------------- | ---------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Unique                | Aucune                 | 100 %                  | Stockage temporaire ou données non critiques où la redondance n'est pas nécessaire.                               |
+| %%RAID 0\|raid0%%     | Aucune                 | 100 %                  | Maximise la performance et la capacité, mais déconseillé pour les données critiques.                              |
+| %%RAID 1\|raid1%%     | 1 panne de disque      | 50%                    | Défaut pour les pools Unraid. Idéal pour le stockage Docker/%%VM\|vm%% et les données critiques.                  |
+| %%RAID 10\|raid10%%   | 1 panne de disque      | 50%                    | Allie la vitesse de %%RAID 0\|raid0%% à la redondance de %%RAID 1\|raid1%% pour les besoins de haute performance. |
+| %%RAID 5\|raid5%%\*   | 1 panne de disque      | 67-94%                 | **Expérimental.** Équilibre capacité et redondance pour le stockage multimédia volumineux.                        |
+| %%RAID 6\|raid6%%\*   | 2 pannes de disque     | 50-88%                 | **Expérimental.** Offre une protection supplémentaire pour le stockage d'archives avec de grands disques.         |
+
+:::important
+
+Les %%RAID 5|raid5%% et %%RAID 6|raid6%% sont considérés comme expérimentaux dans le %%BTRFS|btrfs%%. Le %%ZFS|zfs%% offre un support plus mature pour ces niveaux de %%RAID|raid%%. Utilisez avec précaution et assurez-vous d'avoir des sauvegardes. Évitez d'utiliser des niveaux %%RAID|raid%% expérimentaux pour des données critiques.
+
+:::
+
+Pour changer le niveau de %%RAID|raid%% d'une pool :
+
+1. Démarrez l'%%array|array%% en mode normal.
+2. Dans l'onglet **Main**, cliquez sur le nom du pool.
+3. Faites défiler jusqu'au **Statut d'équilibrage** pour voir les niveaux actuels de %%RAID|raid%% pour les données et les métadonnées.
+4. Sélectionnez le nouveau profil de %%RAID|raid%% dans le menu déroulant.
+5. Cliquez sur **Équilibrage** pour commencer la conversion.
+
+<div style={{ margin: 'auto', maxWidth: '600px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+  ![Conversion de %%RAID 1|raid1%% à Single profile](/img/Btrfs-raid1.jpg)
+  <p class="caption-center">*Exemple : Conversion de %%RAID 1|raid1%% à Single profile*</p>
+</div>
+
+6. Surveillez la progression dans le %%WebGUI|web-gui%%.
+
+:::note\[Timing]
+
+Le partage Média a le sol fixé à 20 Go, ce qui est approprié pour les fichiers dans ce partage. Cependant, si vous utilisez également le pool pour une VM et que vous souhaitez laisser une marge au cas où le vdisk se développerait, vous pouvez définir le sol du pool à 50 Go. De cette façon, tout transfert vers le partage Media après que le pool ait moins de 50 Go libres irait directement au tableau.
+
+:::
+
+<details>
+  <summary>Dépannage des opérations d'équilibrage si bloquées - Cliquez pour développer/réduire</summary>
+
+  Si une opération d'équilibrage semble bloquée ou ne répond pas, suivez ces étapes :
+
+  1. Dans ***Outils → Journaux***, filtrez les entrées `btrfs`.
+  2. Arrêtez et reprenez l'opération :
+     - Cliquez sur **Annuler l'Équilibre**.
+     - Redémarrer l'%%array|array%%.
+     - Initiez à nouveau l'opération d'équilibrage.
+  3. Exécutez des tests %%SMART|smart%% sur tous les appareils du pool. Pour plus d'informations sur la surveillance de la santé des disques, voir [rapports SMART et santé des disques](../../system-administration/monitor-performance/smart-reports-and-disk-health.mdx).
+  4. Assurez-vous qu'il y a au moins 10-15% d'espace libre disponible sur le pool.
+  5. Si des problèmes persistent, partagez les journaux sur le [forum Unraid](https://forums.unraid.net/). Pour des conseils sur la capture de diagnostics, voir [Capturez des diagnostics et des journaux](../../troubleshooting/diagnostics/capture-diagnostics-and-logs.mdx).
+</details>
+
+Pour des détails de configuration avancée pour %%BTRFS|btrfs%%, référez-vous au [wiki BTRFS](https://btrfs.wiki.kernel.org/index.php/Using_Btrfs_with_Multiple_Devices).
+
+---
+
+## Déplacer des fichiers entre une pool et l'array {#moving-files-between-a-pool-and-the-array}
+
+Remplacer un disque dans votre %%cache pool|cache-pool%% est une tâche importante qui aide à maintenir la performance et la fiabilité de votre système de stockage.
+
+:::note\[Prerequisites]
+
+- **Vérifiez la configuration de votre pool :** Assurez-vous que votre pool est configuré avec un profil %%RAID|raid%% redondant, comme %%RAID 1|raid1%%. Vous pouvez le faire en allant à ***Principal → Pool → État de l'équilibre*** (pour %%BTRFS|btrfs%%) ou à l'état du pool ZFS (pour %%ZFS|zfs%%) dans votre interface de gestion.
+- **Choisissez le bon disque de remplacement :** Le nouveau disque doit être de la même taille ou plus grand que celui que vous remplacez.
+- **Capacité de remplacement à chaud :** Si votre matériel supporte le remplacement à chaud, vous n'aurez pas besoin d'éteindre votre système pour remplacer le disque.
+
+:::
+
+Pour remplacer un disque dans une pool :
+
+1. Dans l'onglet **Main**, arrêtez l'%%array|array%% (Opération de la matrice → **Stop**).
+2. (Optionnel) Si vous n'avez pas de hot-swap, retirez physiquement l'ancien disque.
+3. Installez le disque de remplacement et assurez-vous d'une bonne connexion.
+4. Actualisez l'onglet **Main** pour détecter le nouveau disque.
+5. Attribuez le nouveau disque à l'emplacement précédent.
+6. Démarrez l’%%array|array%%.
+7. Surveillez la progression de la reconstruction dans le %%WebGUI|web-gui%%.
+
+:::important\[Timing]
+
+La reconstruction peut prendre du temps, en fonction de la taille du disque et de la charge actuelle de votre système. Par exemple, la reconstruction d'un SSD de 4 To dans une configuration %%RAID 1|raid1%% peut prendre environ 3 à 6 heures. Il est conseillé de planifier cela lorsque vous pouvez permettre au système de travailler sans interruption.
+
+:::
+
+---
+
+## Espace libre minimum pour une pool de cache
+
+Définir un espace libre minimum pour votre %%cache pool|cache-pool%% peut offrir un meilleur contrôle sur le placement des fichiers, surtout lorsqu'il s'agit de gros fichiers comme des vidéos haute résolution. Ce paramètre aide Unraid à savoir quand arrêter d'écrire sur le pool et commencer à écrire directement sur le %%array|array%% de stockage plus grand, évitant les interruptions ou la corruption de données.
+
+:::tip\[Example]
+
+Lors de l'accès à une [partage utilisateur %%user share|user-share%%](./shares.mdx) de plusieurs pools et de disques %%array|array%%, Unraid fusionne les listes de répertoires dans cet ordre :
+
+:::
+
+There are times when you may need to move files between your %%cache pool|cache-pool%% and the main %%array|array%%, such as when preparing for maintenance, upgrading hardware, or optimizing performance. Unraid provides a built-in tool called %%Mover|mover%% to automate this process for [%%user shares|user-share%%](./shares.mdx).
+
+<h4>Comment ça fonctionne</h4>
+
+- Lorsque vous transférez un fichier vers un partage qui inclut un pool, Unraid respectera le premier paramètre de seuil qu'il rencontre (soit l'espace libre minimum du partage, soit celui du pool, selon le cas atteint en premier).
+- Le paramètre d'espace libre minimum indique à Unraid d'arrêter d'utiliser la %%cache pool|cache-pool%% lorsque l'espace libre tombe en dessous de ce montant.
+- Si votre partage utilise une %%cache pool|cache-pool%% comme **Stockage Principal**, les fichiers vont à la pool jusqu'à ce qu'elle atteigne l'espace libre minimum, puis ils sont envoyés directement au %%array|array%%.
+- Si elle est réglée pour utiliser exclusivement la %%cache pool|cache-pool%% (pas de **Stockage Secondaire**), ce paramètre n'est pas appliqué.
+- Si elle est réglée pour n'utiliser que le %%array|array%% comme **Stockage Principal**, les fichiers vont directement au %%array|array%%.
+
+:::tip[Use exemple de cas].
+
+Le partage Média a le sol fixé à 20 Go, ce qui est approprié pour les fichiers dans ce partage. Cependant, si vous utilisez également le pool pour une VM et que vous souhaitez laisser une marge au cas où le vdisk se développerait, vous pouvez définir le sol du pool à 50 Go. De cette façon, tout transfert vers le partage Media après que le pool ait moins de 50 Go libres irait directement au tableau.
+
+:::
+
+:::tip[Best pratique]
+
+Définissez l'espace libre minimum à au moins la taille du fichier le plus grand que vous attendez, de préférence le double de la taille. Par exemple, si votre plus grand fichier est de 30 Go, définissez le minimum à 60 Go.
+
+:::
+
+:::caution
+
+**Ne définissez pas l'espace libre minimum à 0.** Cela peut entraîner des erreurs de disque plein. Utilisez toujours une valeur raisonnable.
+
+:::
+
+---
+
+## Déplacer des fichiers entre une pool et l'array
+
+Il y a des moments où vous pourriez avoir besoin de déplacer des fichiers entre votre %%cache pool|cache-pool%% et l'%%array|array%% principal, par exemple lors de la préparation à la maintenance, de la mise à niveau du matériel ou de l'optimisation des performances. Ce processus est également utile pour sauvegarder votre %%cache pool|cache-pool%% avant d'apporter des modifications à la configuration ou de remplacer des disques. Unraid propose un outil intégré appelé %%Mover|mover%% pour automatiser ce processus pour les [%%user shares|user-share%%](./shares.mdx).
+
+:::tip
+
+Unraid ne permet pas le déplacement direct de fichiers entre pools via le %%WebGUI|web-gui%%, mais vous pouvez le faire en utilisant l'outil %%Mover|mover%% ou en ligne de commande.
+
+:::
+
+### Déplacer du pool vers l'array
+
+<MovePoolToArray />
+
+### Déplacement de fichiers entre pools
+
+<MoveArrayToPool />
+
+<details>
+  <summary><strong>Pourquoi les fichiers se retrouvent-ils parfois dans le mauvais pool ou cache ?</strong> - Cliquez pour déplier/plier</summary>
+
+  Lorsque vous déplacez des fichiers entre les [%%user shares|user-share%%](./shares.mdx) au niveau Linux (par exemple, en utilisant `mv` ou dans un conteneur Docker), Linux essaie d'optimiser l'opération. Si la source et la destination apparaissent sur le même point de montage (`/mnt/user`), Linux peut renommer le fichier au lieu de le déplacer. Cela peut aboutir à ce que les fichiers restent sur le disque ou le pool d'origine, même si le paramètre « Utiliser le cache » du partage est défini sur « Non ».
+
+  Pour vous assurer que les fichiers se déplacent comme prévu, prenez en compte les options suivantes :
+
+  - Utilisez l'outil %%Mover|mover%%.
+  - Copiez les fichiers, puis supprimez les originaux.
+  - Déplacez les fichiers via le réseau.
+
+  Ces méthodes aident à éviter que des fichiers se retrouvent au mauvais endroit.
+</details>
+
+---
+
+## Multiples pools
+
+Unraid vous permet de créer et de gérer jusqu'à 34 pools de stockage séparés, chacun avec jusqu'à 200 appareils. Les pools multiples vous offrent la flexibilité d'allouer le stockage pour différentes tâches, d'améliorer les performances et de personnaliser la redondance en fonction de vos besoins. Chaque pool peut utiliser un système de fichiers différent, un niveau %%RAID|raid%% différent et un type d'appareil (SSD, HDD, NVMe, etc.).
+
+<h4>Pourquoi utiliser plusieurs pools ?</h4>
+
+- **Optimisez la performance :** Les pools séparés pour les %%VMs|vm%%, conteneurs Docker, téléchargements ou médias peuvent améliorer la vitesse et réduire les conflits.
+- **Protégez les données :** Assignez différents niveaux %%RAID|raid%% ou systèmes de fichiers à chaque pool pour une redondance et des options de sauvegarde personnalisées.
+- **Isolez les charges de travail :** Gardez les applications critiques sur des pools plus rapides et redondants et stockez les données volumineuses sur des appareils plus grands et rentables.
+- **Gérez de manière flexible :** Vous pouvez agrandir, réduire ou formater les pools indépendamment sans impact sur les autres.
+
+<h4>Cas d'utilisation courants</h4>
+
+| Cas d'utilisation                   | Exemple de configuration                                                   | Bénéfice                                                  |
+| ----------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------- |
+| %%VMs à haute performance\|vm%%     | Pool NVMe SSD, %%RAID 1\|raid1%%, %%BTRFS\|btrfs%% ou %%ZFS\|zfs%%         | Entrée/Sortie rapide avec redondance                      |
+| Stockage Docker/Appdata             | Pool SSD, %%RAID 1\|raid1%%, %%BTRFS\|btrfs%% ou %%ZFS\|zfs%%              | Accès rapide et protection des données                    |
+| Téléchargements de médias en vrac   | Grand pool HDD, %%RAID 0\|raid0%% ou unique, %%XFS\|xfs%%/%%BTRFS\|btrfs%% | Grande capacité avec moins de redondance                  |
+| Isolation de projet/équipe          | Pools séparés pour chaque équipe/projet                                    | Réduit les conflits de ressources                         |
+| Cibles de sauvegarde et instantanés | Pool %%ZFS\|zfs%%, %%RAIDZ1\|raidz1%%/%%RAIDZ2\|raidz2%% (multi-appareil)  | Prend en charge les instantanés natifs et les sauvegardes |
+
+:::info[Supported Systèmes de fichiers]
+
+- %%BTRFS|btrfs%% : Meilleur pour les pools multi-appareils (prend en charge %%RAID 0|raid0%%, %%RAID 1|raid1%%, %%RAID 10|raid10%%, %%RAID 5|raid5%%, %%RAID 6|raid6%%).
+- %%ZFS|zfs%% : Excellent pour les pools à un ou plusieurs appareils (Unraid 6.12+), avec un support mature pour %%RAIDZ1|raidz1%% et %%RAIDZ2|raidz2%%. Pour des fonctionnalités avancées de ZFS et sa configuration, voir [Stockage ZFS](../../advanced-configurations/optimize-storage/zfs-storage.mdx).
+- %%XFS|xfs%% : Convient pour les pools à un seul appareil.
+
+:::
+
+Lors de l'accès à une [partage utilisateur %%user share|user-share%%](./shares.mdx) de plusieurs pools et de disques %%array|array%%, Unraid fusionne les listes de répertoires dans cet ordre :
+
+1. Pool assigné au partage
+2. Disques %%array|array%% (disk1, disk2, ..., disk28)
+3. Autres pools (dans l'ordre)
+
+### Déplacement de fichiers entre pools
+
+Unraid ne permet pas le déplacement direct de fichiers entre pools via le %%WebGUI|web-gui%%, mais vous pouvez le faire en utilisant l'outil %%Mover|mover%% ou en ligne de commande.
+
+:::note\[Remember]
+
+Si certains des fichiers appartiennent à un conteneur Docker et/ou à une %%VM|vm%%, les services doivent être désactivés pour que les fichiers soient déplacés avec succès.
+
+:::
+
+### Utilisation de Mover
+
+<MoveBetweenPoolsUsingMover />
+
+### Transfert manuel de fichiers (avancé)
+
+<MoveBetweenPoolsManual />
+
+:::warning
+
+Si vous retirez un appareil d'un pool %%BTRFS|btrfs%% ou %%ZFS|zfs%% et le transférez dans un nouveau pool, Unraid effacera toutes les données qu'il contient lorsque le %%array|array%% redémarre. Sauvegardez toujours les données importantes avant de changer les configurations du pool.
+
+:::

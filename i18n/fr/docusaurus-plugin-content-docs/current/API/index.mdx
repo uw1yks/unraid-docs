@@ -1,0 +1,97 @@
+---
+title: Bienvenue sur l'API Unraid
+description: L'API GraphQL officielle pour la gestion et l'automatisation du serveur Unraid
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Card from '@site/src/components/Card';
+import GetStartedV72 from './partials/get-started-v72.mdx';
+import GetStartedPre72 from './partials/get-started-pre72.mdx';
+
+# Bienvenue sur l'API Unraid
+
+:::tip[What's Nouveau]
+
+À partir de Unraid OS v7.2, l'API est intégrée au système d'exploitation - aucune installation de plugin requise !
+
+:::
+
+L'API Unraid fournit une interface GraphQL pour une interaction programmatique avec votre serveur Unraid. Elle permet des capacités d'automatisation, de surveillance et d'intégration.
+
+## 📦 Disponibilité
+
+### ✨ Intégration native (Unraid OS v7.2+)
+
+À partir de Unraid OS v7.2, l'API est intégrée directement dans le système d'exploitation :
+
+- Aucune installation de plugin requise
+- Disponible automatiquement au démarrage du système
+- Intégration système profonde
+- Accès via **Paramètres** → **Gestion de l'accès** → **API**
+
+### 🔌 Installation de plugin (avant 7.2 et utilisateurs avancés)
+
+Pour les versions d'Unraid antérieures à la v7.2 ou pour accéder à de nouvelles fonctionnalités de l'API :
+
+1. Installer le plugin Unraid Connect depuis Applications Communautaires
+2. [Configurer le plugin](./how-to-use-the-api.mdx#enabling-the-graphql-sandbox)
+3. Accéder aux fonctionnalités de l'API via le [GraphQL Sandbox](./how-to-use-the-api.mdx)
+
+:::info[Important Notes]
+
+- Le plugin Unraid Connect fournit l'API pour les versions avant la 7.2
+- Vous n'avez PAS besoin de vous connecter à Unraid Connect pour utiliser l'API localement
+- Installer le plugin sur 7.2+ vous donne accès à de nouvelles fonctionnalités API avant qu'elles ne soient incluses dans les versions OS
+
+:::
+
+## 📚 Sections de documentation
+
+<div style={{affichage: 'grille', templateColonnesGrille: 'répéter(auto-fit, minmax(250px, 1fr))', écart: '1rem'}}>
+  <Card title="Commandes CLI" icon="terminal" href="./cli">
+    Référence complète pour toutes les commandes CLI
+  </Card>
+
+  <Card title="Utilisation de l'API" icon="code" href="./how-to-use-the-api">
+    Apprenez à interagir avec l'API GraphQL
+  </Card>
+
+  <Card title="Configuration OIDC" icon="bouclier" href="./configuration du fournisseur OIDC">
+    Configurer les fournisseurs d'authentification SSO
+  </Card>
+
+  <Card title="Fonctionnalités à venir" icon="fusée" href="./fonctionnalités à venir">
+    Voir ce qui arrive ensuite
+  </Card>
+</div>
+
+## 🌟 Caractéristiques principales
+
+:::info[Core Capacités]
+
+L'API fournit :
+
+- **Interface GraphQL** : API moderne et flexible avec typage fort
+- **Authentification** : Plusieurs méthodes incluant les clés API, cookies de session, et SSO/OIDC
+- **Couverture complète** : Accès aux informations système, gestion de matrice et opérations Docker
+- **Outils pour développeurs** : Bac à sable GraphQL intégré, configurable via une interface web ou CLI
+- **Accès basé sur les rôles** : Contrôle des permissions granulaires
+- **Gestion web** : Gérez les clés API et paramètres via l'interface web
+
+:::
+
+## 🚀 Commencer
+
+<Tabs>
+  <TabItem value="v72" label="Unraid OS v7.2+" default>
+    <GetStartedV72 />
+  </TabItem>
+
+  <TabItem value="ancien" label="Versions pré-7.2">
+    <GetStartedPre72 />
+  </TabItem>
+</Tabs>
+
+Pour des instructions d'utilisation détaillées, voir la référence [Commandes CLI](./cli).

@@ -1,0 +1,564 @@
+---
+sidebar_position: 1
+sidebar_label: Interface en ligne de commande
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import CliCpuInfo from "./partials/command-line-interface/cpu-info.mdx";
+import CliMemoryInfo from "./partials/command-line-interface/memory-info.mdx";
+import CliStorageInfo from "./partials/command-line-interface/storage-info.mdx";
+
+# Interface en ligne de commande
+
+Bien que la plupart des tâches dans Unraid puissent être exécutées à travers le %%WebGUI|web-gui%%, certaines opérations - particulièrement celles liées au diagnostic, à la gestion des disques ou au scripting - nécessitent l'utilisation de la console système ou du terminal %%SSH|ssh%%. Cette page propose des outils de ligne de commande spécifiques à Unraid et des exemples pouvant être utilisés sans nécessiter une connaissance approfondie de Linux.
+
+:::tip[Device chemins]
+
+De nombreuses opérations au niveau des disques Unraid dépendent des noms de périphériques Linux, tels que `/dev/sdX`. Vous pouvez trouver l'identifiant de périphérique pour n'importe quel lecteur dans l'onglet **Principal** du WebGUI. Recherchez le label à trois lettres `sdX` ou `nvmeX` à côté de chaque disque. Utilisez l'identifiant approprié dans toutes les commandes, en remplaçant `sdX` par votre disque spécifique.
+
+:::
+
+## Accéder au terminal {#accessing-the-terminal}
+
+Unraid inclut un terminal web intégré auquel vous pouvez accéder directement depuis le WebGUI. Utilisez simplement le menu déroulant en haut à droite et sélectionnez ">_". Cela ouvre une session en ligne de commande en tant qu'utilisateur root, vous donnant un accès administratif complet à votre système.
+
+Vous pouvez également vous connecter à votre serveur Unraid depuis l'extérieur en utilisant %%SSH|ssh%% (shell sécurisé) avec un client comme %%PuTTY|putty%%.
+
+:::tip[When devrais-je utiliser le terminal ?
+
+Si vous utilisez Windows, vous pourriez préférer %%PuTTY|putty%% pour l'accès %%SSH|ssh%% au lieu du terminal intégré. Il est léger, gratuit, et vous permet d'enregistrer des sessions pour un accès facile ultérieur.
+
+- Lancer des diagnostics et des outils en ligne de commande comme `smartctl`, `xfs_repair`, `tail` ou `top`
+- Exécuter des scripts ou des outils de plug-ins qui ne nécessitent pas d'interface utilisateur.
+- Résoudre des problèmes liés à la connectivité, aux services système, ou aux %%user shares|user-share%%
+
+:::
+
+### Test et surveillance des disques
+
+Si vous utilisez Windows, vous pourriez préférer %%PuTTY|putty%% pour l'accès %%SSH|ssh%% au lieu du terminal intégré. Il est léger, gratuit, et vous permet d'enregistrer des sessions pour un accès facile ultérieur.
+
+<details>
+  <summary><strong>Comment installer et utiliser PuTTY</strong> - Cliquer pour développer/réduire</summary>
+
+  **Voir les informations sur le disque :**
+
+  ```bash
+  hdparm -I /dev/sdX
+  ```
+
+  Cela affiche le modèle, le firmware, la taille du cache et les fonctionnalités supportées, ce qui aide à vérifier le type de disque et le comportement du contrôleur.
+</details>
+
+### `smartctl`
+
+Cette commande exécute des diagnostics %%SMART|smart%% et surveille la santé du disque.
+
+<details>
+  <summary><strong>Voir les options smartctl</strong> - Cliquer pour développer/réduire</summary>
+
+  **Rapport %%SMART|smart%% de base :**
+
+  ```bash
+  smartctl -a /dev/sdX
+  ```
+
+  Si cette commande retourne une erreur, essayez de spécifier le type de périphérique : `smartctl -a -d ata /dev/sdX` (utilisez `-d nvme` pour les disques NVMe).
+
+  **Commencer les tests autonomes %%SMART|smart%% :**
+
+  Test court (prend quelques minutes)
+
+  ```bash
+  smartctl -t short /dev/sdX
+  ```
+
+  Test étendu (peut prendre plusieurs heures)
+
+  ```bash
+  smartctl -t long /dev/sdX
+  ```
+
+  **Enregistrer le rapport %%SMART|smart-report%% dans un fichier :**
+
+  ```bash
+  smartctl -a /dev/sdX > /boot/smart_report.txt
+  ```
+
+  Cela enregistre le rapport sur votre clé USB Unraid pour révision ou partage ultérieur sur le [forum](https://forums.unraid.net/).
+</details>
+
+### Surveillance du système
+
+Utilisez ces commandes pour surveiller la mémoire, les processus et les performances du système lorsque le %%WebGUI|web-gui%% n'est pas disponible ou pour des diagnostics plus détaillés.
+
+<details>
+  <summary><strong>Voir l'utilisation de top</strong> - Cliquer pour développer/réduire</summary>
+
+  Cela a été un script que vous téléchargiez depuis les forums Unraid. DiskSpeed est maintenant disponible dans un package plus raffiné :
+
+  Installez DiskSpeed depuis les [Applications Communautaires](../../using-unraid-to/run-docker-containers/community-applications.mdx) (***onglet Apps***) en recherchant "DiskSpeed", ou visitez le [référentiel GitHub](https://github.com/jbartlett777/DiskSpeed) pour des instructions d'installation manuelles.
+</details>
+
+---
+
+## `top`
+
+Utilisez ces commandes pour surveiller la mémoire, les processus et les performances du système lorsque le %%WebGUI|web-gui%% n'est pas disponible ou pour des diagnostics plus détaillés.
+
+### `ps`
+
+Utilisez cette commande pour afficher les processus en cours avec des informations détaillées.
+
+<details>
+  <summary><strong>Voir les options ps</strong> - Cliquer pour développer/réduire</summary>
+
+  ```bash
+  top
+  ```
+
+  - Affiche l'utilisation du CPU et de la mémoire pour chaque processus en temps réel.
+  - Appuyez sur `q` pour quitter.
+  - Utilisez les flèches pour faire défiler et `k` pour terminer les processus.
+
+    :::tip
+    Envisagez d'utiliser `htop` pour une interface plus conviviale avec des commandes améliorées.
+    :::
+</details>
+
+### `free`
+
+Cette commande affiche les statistiques d'utilisation de la mémoire.
+
+<details>
+  <summary><strong>Voir l'utilisation de free</strong> - Cliquer pour développer/réduire</summary>
+
+  ```bash
+  free -h
+  ```
+
+  Cela affiche l'utilisation de la RAM dans un format lisible par l'homme. L'option `-h` signifie que les tailles s'afficheront en Ko, Mo ou Go au lieu de bytes.
+
+  :::tip[Comprendre la sortie]
+  Une lecture de mémoire "disponible" basse n'indique pas nécessairement un problème—Linux met en cache de manière agressive les données pour améliorer les performances.
+  :::
+</details>
+
+### Utilitaires de stockage
+
+Ces commandes aident à vérifier l'utilisation des disques, les informations des partitions et à identifier les périphériques de stockage.
+
+<details>
+  <summary><strong>Voir utilisation de df</strong> - Cliquer pour développer/réduire</summary>
+
+  **Lister tous les processus avec tous les détails :**
+
+  ```bash
+  ps aux
+  ```
+
+  :::tip
+  Pensez à utiliser `htop` pour une interface plus conviviale avec des commandes améliorées.
+  :::
+
+  ```bash
+  ps aux --sort=-%mem | head -20
+  ```
+
+  **Trier par utilisation du processeur :**
+
+  ```bash
+  ps aux --sort=-%cpu | head -20
+  ```
+</details>
+
+---
+
+## `df`
+
+Cette commande affiche l'utilisation de l'espace disque des systèmes de fichiers.
+
+### `lsblk`
+
+Liste tous les périphériques blocs en format arborescent.
+
+<details>
+  <summary><strong>Voir l'utilisation de lsblk</strong> - Cliquer pour développer/réduire</summary>
+
+  ```bash
+  df -h
+  ```
+
+  Cette commande affiche l'espace utilisé et disponible sur tous les systèmes de fichiers montés. C'est pratique pour vérifier `/var/log` (qui utilise la journalisation basée sur la RAM) dans Unraid. Pour plus d'informations sur [la journalisation système](../../troubleshooting/diagnostics/capture-diagnostics-and-logs.mdx).
+</details>
+
+### `blockdev -getsz`
+
+Aide à déterminer si un disque de remplacement a suffisamment d'espace avant la reconstruction.
+
+<details>
+  <summary><strong>Voir l'utilisation de blockdev</strong> - Cliquer pour développer/réduire</summary>
+
+  ```bash
+  fdisk -l /dev/sdX
+  ```
+
+  Cette commande affiche la disposition des partitions, les tailles et la géométrie du disque. Elle aide à diagnostiquer les tailles de disque incompatibles, notamment lors du [remplacement de disques](../../using-unraid-to/manage-storage/array/replacing-disks-in-array.mdx).
+</details>
+
+### `blkid`
+
+Identifier les labels de systèmes de fichiers.
+
+<details>
+  <summary><strong>Voir l'utilisation de blkid</strong> - Cliquer pour développer/réduire</summary>
+
+  ```bash
+  lsblk
+  ```
+
+  Cette commande affiche l'espace utilisé et disponible sur tous les systèmes de fichiers montés. C'est pratique pour vérifier `/var/log` (qui utilise la journalisation basée sur la RAM) dans Unraid. Pour plus d'informations sur [la journalisation système](../../troubleshooting/diagnostics/capture-diagnostics-and-logs.mdx).
+</details>
+
+### `blockdev -getsz`
+
+Aide à déterminer si un disque de remplacement a suffisamment d'espace avant la reconstruction.
+
+<details>
+  <summary><strong>Voir l'utilisation de fdisk</strong> - Cliquer pour développer/réduire</summary>
+
+  **Syntaxe :**
+
+  ```bash
+  blockdev --getsz /dev/sdX
+  ```
+
+  Retourne le nombre brut de secteurs de 512 octets sur un périphérique - pratique pour confirmer qu'un disque de remplacement est suffisamment grand avant la reconstruction.
+</details>
+
+### Diagnostics réseau
+
+Outils pour dépanner la connectivité réseau et la configuration des interfaces.
+
+<details>
+  <summary><strong>Voir les options ss</strong> - Cliquer pour développer/réduire</summary>
+
+  **Syntaxe :**
+
+  ```bash
+  blkid /dev/sdX1
+  ```
+
+  Affiche le type et l'étiquette du système de fichiers. Utilisez cela à la place de la commande `vol_id` obsolète lors de la vérification que la clé USB Unraid est étiquetée `UNRAID`.
+</details>
+
+---
+
+## `ss`
+
+Affiche les statistiques de socket et les connexions réseau. C'est le remplacement moderne de `netstat`.
+
+### `ping`
+
+Tester la connectivité réseau.
+
+<details>
+  <summary><strong>Voir l'utilisation de ping</strong> - Cliquer pour développer/réduire</summary>
+
+  **Tester la connectivité en envoyant un nombre limité de paquets :**
+
+  ```bash
+  ss -tuln
+  ```
+
+  - `-t`: Sockets TCP
+  - `-u`: Sockets UDP
+  - `-l`: Montrer uniquement les sockets à l'écoute
+  - `-n`: Afficher les numéros de port plutôt que les noms de service
+
+    **Afficher les connexions établies :**
+
+    ```bash
+    ss -tup
+    ```
+
+    Cette commande affiche les connexions actives avec les informations de process.
+</details>
+
+### `ethtool`
+
+Outil pratique pour interroger et ajuster les paramètres des cartes réseau (NIC), tels que la vitesse de lien, les fonctionnalités de déchargement et les statistiques.
+
+<details>
+  <summary><strong>Voir l'utilisation d'ethtool</strong> - Cliquer pour développer/réduire</summary>
+
+  **Informations basiques sur le pilote et le firmware :**
+
+  ```bash
+  ip addr show
+  ```
+
+  **Afficher les interfaces réseau avec couleurs :**
+
+  ```bash
+  ip -c addr show
+  ```
+
+  Pour vérifier la vitesse et les paramètres de lien actuels de votre interface, exécutez :
+
+  ```bash
+  ip route show
+  ```
+</details>
+
+### `ping`
+
+Tester la connectivité réseau.
+
+<details>
+  <summary><strong>Voir les options ss</strong> - Cliquer pour développer/réduire</summary>
+
+  **Afficher tous les ports à l'écoute :**
+
+  ```bash
+  ping -c 4 google.com
+  ```
+
+  Cette commande envoie quatre paquets à la destination et s'arrête, ce qui la rend adaptée aux tests de connectivité de base sans sortie continue.
+</details>
+
+### `tail`
+
+Surveiller les fichiers journaux en temps réel.
+
+<details>
+  <summary><strong>Voir les options ip</strong> - Cliquer pour développer/réduire</summary>
+
+  **Afficher toutes les interfaces réseau :**
+
+  Utilisez cette commande pour obtenir des informations sur le pilote et le firmware de votre interface réseau :
+
+  ```bash
+  ethtool -i eth0
+  ```
+
+  **Afficher la vitesse de lien actuelle et les paramètres :**
+
+  **Afficher la table de routage :**
+
+  ```bash
+  ethtool eth0
+  ```
+
+  **Afficher les statistiques d'interface étendues :**
+
+  Pour des statistiques étendues relatives à l'interface, utilisez la commande suivante :
+
+  ```bash
+  ethtool -S eth0
+  ```
+
+  Ces commandes peuvent vous aider à confirmer les vitesses de négociation pour les connexions gigabit, 2.5 GbE, ou 10 GbE, diagnostiquer les problèmes avec les câbles, ou identifier les paquets perdus qui pourraient provenir de déconnexions d'équipements.
+</details>
+
+---
+
+## `ethtool`
+
+Outil pratique pour interroger et ajuster les paramètres des cartes réseau (NIC), tels que la vitesse de lien, les fonctionnalités de déchargement et les statistiques.
+
+<Tabs>
+  <TabItem value="processeur" label="Infos CPU">
+    <CliCpuInfo />
+  </TabItem>
+
+  <TabItem value="mémoire" label="Infos Mémoire">
+    <CliMemoryInfo />
+  </TabItem>
+
+  <TabItem value="stockage" label="Infos de stockage">
+    <CliStorageInfo />
+  </TabItem>
+</Tabs>
+
+---
+
+## `tail`
+
+Surveiller les fichiers journaux en temps réel.
+
+### `tail`
+
+Surveiller les fichiers journaux en temps réel.
+
+<details>
+  <summary><strong>Voir l'utilisation de tail</strong> - Cliquez pour développer/réduire</summary>
+
+  ```bash
+  tail -f /var/log/syslog
+  ```
+
+  Cette commande montre des mises à jour en direct du journal système. Pour quitter, utilisez `Ctrl+C`.
+
+  **Afficher un nombre spécifique de lignes :**
+
+  ```bash
+  tail -n 50 /var/log/syslog
+  ```
+</details>
+
+### `powerdown`
+
+Arrêter le système en toute sécurité.
+
+<details>
+  <summary><strong>Voir l'utilisation de powerdown</strong> - Cliquez pour développer/réduire</summary>
+
+  ```bash
+  powerdown
+  ```
+
+  Cette commande utilise le processus d'arrêt intégré d'Unraid pour arrêter le %%array|array%% et éteindre le système en toute sécurité. C'est préférable aux méthodes d'arrêt manuelles.
+</details>
+
+---
+
+## Opérations de transfert de fichiers {#file-transfer-operations}
+
+## `powerdown`
+
+Ces méthodes vous aident à transférer des fichiers depuis des partages réseaux externes (partages Windows ou Linux SMB/CIFS) vers votre serveur Unraid en utilisant des outils de ligne de commande et des utilitaires intégrés.
+
+### Utilisation de Midnight Commander (intégré)
+
+Unraid inclut **Midnight Commander** (`mc`), un gestionnaire de fichiers à double volet basé sur du texte accessible via le terminal Web.
+
+1. **Ouvrez le terminal web :** vous trouverez cette option dans le menu en haut à droite du %%WebGUI|web-gui%% Unraid.
+
+2. Lancez Midnight Commander :
+
+   ```bash
+   mc
+   ```
+
+   Cette interface propose une navigation par glisser-déposer entre les partages locaux et les chemins réseau montés.
+
+3. Montez un partage réseau (s'il n'est pas déjà monté) :
+
+   ```bash
+   # Create a temporary mount point
+   mkdir /work
+   ```
+
+   ```bash
+   # 1) Interactive prompt (recommended for one-off mounts)
+   mount -t cifs //workstation/share /work -o username=youruser,iocharset=utf8
+   # You will be prompted for the password interactively.
+   ```
+
+   ```bash
+   # 2) Use a credentials file (recommended for scripts/automation)
+   # Create /root/.cifscredentials with the following content:
+   #   username=youruser
+   #   password=yourpassword
+   # Then protect the file and mount using:
+   chmod 600 /root/.cifscredentials
+   mount -t cifs //workstation/share /work -o credentials=/root/.cifscredentials,iocharset=utf8
+   ```
+
+   - Remplacez `workstation`, `share` et `youruser` par les valeurs appropriées.
+   - L'option `iocharset=utf8` aide à maintenir les noms de fichiers internationaux.
+
+   **Note de sécurité :** Ne passez pas les mots de passe en ligne de commande (par exemple `motdepasse=...`).
+   Les arguments de commande peuvent être enregistrés dans l'historique du shell et sont visibles par d'autres utilisateurs locaux via les listes de processus ; préférez les invites interactives ou un fichier de crédentiels protégé avec `chmod 600`.
+
+4. Utilisez les volets MC pour transférer les fichiers entre `/work` (le partage réseau) et n'importe quel partage `/mnt/user/` ou `/mnt/diskX`.
+
+5. Nettoyez ensuite :
+
+   ```bash
+   umount /work
+   rmdir /work
+   ```
+
+Midnight Commander fonctionne entièrement dans le système intégré, nécessitant aucune installation supplémentaire. Il convient à la plupart des besoins de transfert, y compris ceux impliquant des noms de fichiers Unicode, et il préserve les attributs de fichier lorsque la source et la destination les prennent en charge.
+
+### Utilisation de Krusader
+
+Si vous préférez une interface utilisateur graphique, vous pouvez utiliser des conteneurs Docker tels que [Krusader](https://unraid.net/community/apps?q=krusader#r:~:text=batch%20renaming%2C%20etc.-,Krusader,-Productivity%2C%20Tools) comme solution tierce.
+
+1. Installez Krusader :
+   - Naviguez jusqu'à l'onglet **Apps** (Applications Communautaires).
+   - Recherchez et installez le conteneur Docker **Krusader**.
+2. Démarrez le conteneur et accédez à son interface WebUI depuis l'onglet **Docker**.
+3. Connectez-vous aux partages distants dans Krusader, et utilisez le glisser-déposer ou le copier-coller pour transférer les fichiers entre le partage réseau et votre %%array|array%% Unraid.
+
+:::info
+
+D'autres conteneurs de gestion de fichiers populaires incluent [**Double Commander**](https://unraid.net/community/apps?q=double+commander#r:~:text=of%201%20App-,doublecommander,-Tools%20/%20Utilities%2C) et [**CloudCommander**](https://unraid.net/community/apps?q=cloudcommander#r:~:text=of%201%20App-,CloudCommander,-Tools%20/%20Utilities%2C), tous deux disponibles via les Applications Communautaires.
+
+:::
+
+### Méthodes en ligne de commande
+
+Pour les utilisateurs avancés ou ceux utilisant l'automatisation, vous pouvez également utiliser des méthodes de transfert en ligne de commande.
+
+<details>
+  <summary><strong>Voir les instructions de transfert en ligne de commande</strong> - Cliquez pour développer/réduire</summary>
+
+  1. Ouvrez le terminal (Terminal Web ou %%SSH|ssh%% en tant que `root`).
+
+  2. Créez et montez un partage réseau :
+
+  ```bash
+  mkdir /work
+  ```
+
+  ```bash
+  # 1) Interactive prompt (recommended for one-off mounts)
+  mount -t cifs //workstation/share /work -o username=youruser,iocharset=utf8
+  # You will be prompted for the password interactively.
+  ```
+
+  ```bash
+  # 2) Use a credentials file (recommended for scripts/automation)
+  # Create /root/.cifscredentials with the following content:
+  #   username=youruser
+  #   password=yourpassword
+  # Then protect the file and mount using:
+  chmod 600 /root/.cifscredentials
+  mount -t cifs //workstation/share /work -o credentials=/root/.cifscredentials,iocharset=utf8
+  ```
+
+  **Note de sécurité :** Ne pas passer de mots de passe en ligne de commande. Utilisez plutôt une invite interactive ou un fichier de crédentials avec des permissions strictes.
+
+  1. Copier les fichiers :
+
+     - Vous pouvez utiliser `cp` :
+
+       ```bash
+       cp -r /work/* /mnt/disk1
+       ```
+
+     - Ou, utilisez `rsync` pour un suivi détaillé :
+
+       ```bash
+       rsync -av --progress /work/ /mnt/disk1/
+       ```
+
+  2. Démontez et supprimez le répertoire temporaire :
+
+     ```bash
+     umount /work
+     rmdir /work
+     ```
+</details>
+
+:::caution
+
+Lors du transfert de fichiers avec des caractères spéciaux ou internationaux, montez toujours le partage avec l'option `iocharset=utf8`. Ne pas le faire peut entraîner des noms de fichiers incorrects ou des fichiers illisibles sur d'autres plateformes.
+
+De plus, si vous copiez des fichiers en tant que `root` via le terminal, ils peuvent avoir des permissions restrictives. Si cela se produit, utilisez l'outil **Nouvelles Permissions** du menu **Outils** dans le %%WebGUI|web-gui%% ou le **Docker Safe New Perms** si vous traitez des partages impliqués dans Docker pour réinitialiser les permissions, garantissant à tous les utilisateurs l'accès au réseau.
+
+:::

@@ -1,0 +1,188 @@
+---
+title: Hoja de Ruta y Características
+description: Estado actual y características futuras para la API de Unraid
+sidebar_position: 10
+---
+
+# Hoja de Ruta y Características
+
+:::info[Development Estado]
+
+Esta hoja de ruta describe las funciones completadas y planificadas para el Unraid API. Las características y los plazos pueden cambiar según las prioridades de desarrollo y los comentarios de la comunidad.
+
+:::
+
+## Leyenda del Estado de Características
+
+| Estado                    | Descripción                                    |
+| ------------------------- | ---------------------------------------------- |
+| ✅ **Hecho**               | La característica está completa y disponible.  |
+| 🚧 **En progreso**        | Actualmente en desarrollo activo.              |
+| 📅 **Planificado**        | Programado para desarrollo futuro.             |
+| 💡 **Bajo Consideración** | Siendo evaluado para posible inclusión futura. |
+
+## Infraestructura Principal
+
+### Características Completadas ✅
+
+| Característica                              | Disponible Desde   |
+| ------------------------------------------- | ------------------ |
+| **Mejoras al Entorno de Desarrollo de API** | v4.0.0             |
+| **Incluir API en Unraid OS**                | Unraid v7.2-beta.1 |
+| **Separar API del Complemento Connect**     | Unraid v7.2-beta.1 |
+
+### Seguridad y Autenticación
+
+| Característica                                        | Cronograma Objetivo                                                              |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **Hacer API Código Abierto**                          | Completado — código abierto enero 2025 ([GitHub](https://github.com/unraid/api)) |
+| **Herramientas para Desarrolladores de Complementos** | Q2 2025                                                                          |
+
+## Seguridad y Autenticación
+
+### Características Completadas ✅
+
+| Característica                          | Disponible Desde   |
+| --------------------------------------- | ------------------ |
+| **Reescritura del Sistema de Permisos** | v4.0.0             |
+| **Soporte OIDC/SSO**                    | Unraid v7.2-beta.1 |
+
+### En Desarrollo 🚧
+
+- **Biblioteca de Componentes de Interfaz de Usuario** - Componentes de seguridad mejorados para la IU
+
+## Mejoras en la Interfaz de Usuario
+
+### Características Planificadas 📅
+
+| Característica                              | Cronograma Objetivo | Descripción                                                    |
+| ------------------------------------------- | ------------------- | -------------------------------------------------------------- |
+| **Nuevas Páginas de Configuración**         | Q2 2025             | Interfaz de configuración modernizada con mejora en UX         |
+| **Creador de Temas Personalizados**         | Q2-Q3 2025          | Permitir a los usuarios crear y compartir temas personalizados |
+| **Nueva Interfaz de Configuración Connect** | Q1 2025             | Rediseño de la configuración de Unraid Connect                 |
+
+## Gestión de Arreglos
+
+### Características Completadas ✅
+
+| Característica                    | Disponible Desde |
+| --------------------------------- | ---------------- |
+| **Monitor de Estado del Arreglo** | v4.0.0           |
+
+### Características Planificadas 📅
+
+| Característica                                     | Cronograma Objetivo | Descripción                                       |
+| -------------------------------------------------- | ------------------- | ------------------------------------------------- |
+| **Interfaz de Creación de Pool de Almacenamiento** | Q2 2025             | Flujo de trabajo de creación de pool simplificado |
+| **Interfaz de Estado de Pool de Almacenamiento**   | Q2 2025             | Monitoreo de salud del pool en tiempo real        |
+
+## Integración Docker
+
+### Características Completadas ✅
+
+| Característica                               | Disponible Desde |
+| -------------------------------------------- | ---------------- |
+| **Monitor de Estado de Contenedores Docker** | v4.0.0           |
+
+### Características Planificadas 📅
+
+| Característica                                       | Cronograma Objetivo | Descripción                                   |
+| ---------------------------------------------------- | ------------------- | --------------------------------------------- |
+| **Nuevo Diseño de Interfaz de Estado de Docker**     | Q3 2025             | Interfaz moderna para gestión de contenedores |
+| **Nueva Interfaz de Estado de Docker**               | Q3 2025             | Implementación de nuevo diseño                |
+| **Interfaz de Configuración de Contenedores Docker** | Q3 2025             | Despliegue simplificado de contenedores       |
+| **Soporte Docker Compose**                           | Por determinar      | Soporte nativo para docker-compose.yml        |
+
+## Gestión de Comparticiones
+
+### Características Completadas ✅
+
+| Característica                                            | Disponible Desde |
+| --------------------------------------------------------- | ---------------- |
+| **Monitor de Estado de Comparticiones del Arreglo/Cache** | v4.0.0           |
+
+### Bajo Consideración 💡
+
+- **Creación y Configuración de Comparticiones de Almacenamiento** - Opciones mejoradas de configuración de comparticiones
+- **Interfaz de Gestión de Comparticiones de Almacenamiento** - Panel de gestión unificada de comparticiones
+
+## Sistema de Plugins
+
+### Características Planificadas 📅
+
+| Característica                            | Cronograma Objetivo | Descripción                             |
+| ----------------------------------------- | ------------------- | --------------------------------------- |
+| **Nueva Interfaz de Plugins**             | Q3 2025             | Rediseño de microgestión de plugins     |
+| **Interfaz de Gestión de Plugins**        | Por determinar      | Configuración avanzada de plugins       |
+| **Herramientas de Desarrollo de Plugins** | Por determinar      | SDK y herramientas para desarrolladores |
+
+## Notificaciones
+
+### Características Completadas ✅
+
+| Característica                 | Disponible Desde |
+| ------------------------------ | ---------------- |
+| **Sistema de Notificaciones**  | v4.0.0           |
+| **Interfaz de Notificaciones** | v4.0.0           |
+
+---
+
+## Lanzamientos Recientes
+
+:::info[Full Historial de versiones]
+
+Para una lista completa de todos los lanzamientos, registros de cambios y enlaces de descarga, visite la página de [Lanzamientos en GitHub de la API de Unraid](https://github.com/unraid/api/releases).
+
+:::
+
+### Aspectos Destacados de Unraid v7.2-beta.1
+
+- 🎉 **API incluida en Unraid OS** - Integración nativa
+- 🔐 **Soporte OIDC/SSO** - Autenticación empresarial
+- 📦 **API Independiente** - Separada del complemento Connect
+
+### Aspectos Destacados de v4.0.0
+
+- 🛡️ **Reescritura del Sistema de Permisos** - Seguridad mejorada
+- 📊 **Monitoreo Integral** - Estado de Arreglo, Docker y Comparticiones
+- 🔔 **Sistema de Notificaciones** - Alertas y notificaciones en tiempo real
+- 🛠️ **Entorno de Desarrollo** - Herramientas de desarrollo mejoradas
+
+## Comentarios de la Comunidad
+
+:::tip[Have Soporte]
+
+¡Comentarios de la comunidad recibidos; API de código abierto en enero de 2025! Por favor envíe solicitudes de funciones y comentarios a través de:
+
+- [Unraid Forums](https://forums.unraid.net)
+- [Problemas en GitHub](https://github.com/unraid/api/issues) - ¡La API ahora es de código abierto!
+
+:::tip[Envía tu Feedback]
+
+¡Comentarios de la comunidad recibidos; API de código abierto en enero de 2025! Por favor envíe solicitudes de funciones y comentarios a través de:
+
+- [Unraid Forums](https://forums.unraid.net)
+- [Problemas en GitHub](https://github.com/unraid/api/issues) - ¡La API ahora es de código abierto!
+
+:::
+
+## Soporte de Versión
+
+| Versión de Unraid   | Versión de API          | Estado de Soporte |
+| ------------------- | ----------------------- | ----------------- |
+| Unraid v7.2-beta.1+ | Última                  | ✅ Activo          |
+| 7.0 - 7.1.x         | v4.x a través de Plugin | ⚠️ Limitado       |
+| 6.12.x              | v4.x a través de Plugin | ⚠️ Limitado       |
+| < 6.12              | No Soportado            | ❌ EOL             |
+
+:::warning[Legacy Soporte]
+
+Las versiones anteriores a Unraid 7.2 requieren que la API se instale a través del complemento Unraid Connect. Algunas características pueden no estar disponibles en versiones más antiguas.
+
+:::
+
+:::tip[Pre-release Versiones]
+
+Siempre puede instalar el complemento Unraid Connect para acceder a versiones pre-lanzamiento de la API y obtener acceso anticipado a nuevas características antes de que se incluyan en los lanzamientos de Unraid OS.
+
+:::

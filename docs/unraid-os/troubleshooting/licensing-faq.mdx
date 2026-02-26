@@ -1,0 +1,204 @@
+---
+sidebar_position: 4
+sidebar_label: Licensing FAQ
+toc_max_heading_level: 3
+---
+
+# Licensing FAQ
+
+This page contains frequently asked questions about Unraid OS licensing. For general troubleshooting questions, see the [main FAQ](faq.mdx).
+
+---
+
+## License Ownership
+
+### Do I own my software license? {#own-license}
+
+When you [purchase an Unraid OS license](https://unraid.net/pricing), you own a perpetual copy of the software. Your license is valid forever and does not expire, even if you choose not to pay for future updates.
+
+---
+
+## Purchasing
+
+### How do I purchase Unraid? {#purchase-unraid}
+
+You have two options for purchasing Unraid:
+
+1. **From the %%WebGUI|web-gui%%:** If you have started a trial, you can purchase a license or upgrade directly from the top-right menu in the %%WebGUI|web-gui%%.
+2. **With an activation code:** Purchase an Unraid license activation code from the [Unraid website](https://unraid.net/pricing). Activation codes do not expire and can be redeemed at any time.
+
+All licenses are per server. Use the free 30-day trial to ensure Unraid meets your needs before purchasing, as all sales are final.
+
+### How do I redeem a license activation code? {#redeem-activation-code}
+
+See [Redeem Activation Code](../../unraid-account/redeem-activation-code.mdx)
+
+### I'm a reseller/OEM needing to purchase a license on behalf of my customer. What should I do? {#oem-purchase}
+
+You can purchase a license through the %%WebGUI|web-gui%% or by obtaining an activation code from the [Unraid website](https://unraid.net/pricing).
+
+At checkout, select the "OEM" option and enter your purchase details, including your customer's name and email address. The license key will be issued in your customer's name and sent directly to them. You'll also find an invoice download link after checkout.
+
+For bulk OEM/reseller pricing (10 licenses or more), [contact Unraid](https://unraid.net/contact) for special pricing.
+
+---
+
+## License Management
+
+### How do I upgrade my Unraid license? {#upgrade-license}
+
+You can upgrade your license at any time from within the %%WebGUI|web-gui%% (***Tools → Registration***) or [via the account portal](https://account.unraid.net/keys) (by clicking **••• More** and selecting **Upgrade Key**).
+
+<div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
+
+| Upgrade Path         | One-Time Upgrade Fee | New Device Limit¹ |
+| -------------------- | -------------------- | ----------------- |
+| Starter → Unleashed  | $69 USD              | Unlimited²        |
+| Starter → Lifetime   | $209 USD             | Unlimited²        |
+| Unleashed → Lifetime | $149 USD             | Unlimited²        |
+| Basic → Unleashed    | $49 USD              | Unlimited²        |
+| Plus → Unleashed     | $19 USD              | Unlimited²        |
+| Basic → Plus         | $89 USD              | Up to 12 devices¹ |
+| Basic → Pro          | $139 USD             | Unlimited²        |
+| Plus → Pro           | $109 USD             | Unlimited²        |
+
+</div>
+
+**Annual extension fee** (Starter & Unleashed only): $36 USD
+
+<!-- markdownlint-disable MD033 -->
+<sup>1</sup> Attached storage devices refers to the total number of drives you may attach before starting the %%array|array%% (does not include the USB flash boot device).\
+<sup>2</sup> "Unlimited" means you are not limited by the license, but by hardware and OS constraints. Additional storage devices can be used for %%VMs|vm%%, unassigned devices, or other Unraid features.\*
+<!-- markdownlint-enable MD033 -->
+
+### How do I manually install my license keyfile to my USB flash device? {#manual-keyfile-install}
+
+#### Install via WebGUI download
+
+1. Navigate to [account.unraid.net/keys](https://account.unraid.net/keys), select **View options** next to your key, then click **Copy Key URL**.
+2. Navigate to your server's ***Tools → Registration***.
+3. Scroll to the bottom of the Registration page, to the **Install Key** section.
+4. Paste the URL into the **Key file URL** field, and click **Install**.
+
+#### Install via network share
+
+1. If your server is running and the flash share is visible on your network, navigate to the flash share under **Network**.
+2. Drag and drop the registration key file into the `config` directory.
+3. In the %%WebGUI|web-gui%%, **Stop** the %%array|array%%, then **Start** the %%array|array%% again to apply the new key.
+
+#### Install via USB flash drive
+
+1. Ensure you have a recent backup of your USB drive. Use [Unraid Connect](../../unraid-connect/overview-and-setup.mdx) (recommended) or the local backup option at ***Main → Flash → Flash Backup***.
+2. Shut down your Unraid server and remove the USB flash device.
+3. Insert the USB flash into another computer.
+4. Open the USB drive and copy your `.key` file into the `/config` folder.
+   *Make sure this is the only `.key` file present - delete any others.*
+5. Safely eject the USB flash device, reinstall it in your server, and reboot.
+
+### How can I determine my registration type? {#registration-type}
+
+Navigate to ***Tools → Registration*** in the %%WebGUI|web-gui%%. Here, you can find your current license type and registration details.
+
+---
+
+## License Types & Features
+
+### Is Unraid OS a subscription? {#subscription}
+
+No. Unraid OS is a **perpetual license**:
+
+- **Starter** and **Unleashed** include one year of updates, after which you may pay a $36 USD annual extension fee (optional).
+- **Lifetime** includes updates for the life of the product.
+- If you choose not to pay the extension fee, you retain your existing version indefinitely; you simply won't receive new major updates.
+
+You continue to own your license even if you stop paying for updates.
+
+### What happens if I don't extend my Starter or Unleashed license? {#no-extension}
+
+- You keep your license and can use your current version of Unraid OS indefinitely.
+- You won't receive new feature updates or major version upgrades.
+- You remain eligible for patch releases and security updates within the same minor version (e.g., 7.1.x if your license lapsed at 7.1.0).
+- Once a new minor version is released (e.g., 7.2.0), only security patches are provided for the previous minor version.
+- When a version reaches end-of-life (EOL), no further updates are provided.
+- You can pay the extension fee at any time to regain access to the latest updates.
+
+### What happens with pre-releases (Beta/RC versions)? {#pre-release-policy}
+
+- Pre-release (Beta and Release Candidate) versions are for testing and may contain bugs.
+- Only install pre-releases on non-production systems.
+- Support for pre-releases ends when the stable version is released.
+- Your license must be eligible for OS updates on the stable release date to receive the stable version.
+- If your license expires before the stable release, you must extend your license to upgrade or roll back to a supported stable version.
+- Your license remains valid after expiration; you only need an active license for new updates.
+
+### What does "unlimited" mean for attached storage devices? {#unlimited-storage}
+
+"Unlimited" refers to the maximum number of storage devices you can attach to your Unraid server, based on your license tier.
+
+Here are the current limits:
+
+<div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
+
+| License Tier | %%Parity\|parity%%-Protected %%Array\|array%% | Named Pools | Devices per Pool | Total Attached Storage Devices |
+| ------------ | --------------------------------------------- | ----------- | ---------------- | --------------------- |
+| Starter      | Up to 6 (including parity)                    | Up to 6     | Up to 6          | Up to 6¹              |
+| Unleashed    | Up to 30 (28 data + 2 %%parity\|parity%%)     | Up to 34    | Up to 200        | Unlimited²            |
+| Lifetime     | Up to 30 (28 data + 2 %%parity\|parity%%)     | Up to 34    | Up to 200        | Unlimited²            |
+
+</div>
+
+<!-- markdownlint-disable MD033 -->
+<sup>1</sup> Attached storage devices refers to the total number of drives you may attach before starting the %%array|array%% (does not include the USB flash boot device).\
+<sup>2</sup> "Unlimited" means you are not limited by the license, but by hardware and OS constraints. Additional storage devices can be used for %%VMs|vm%%, unassigned devices, or other Unraid features.\*
+<!-- markdownlint-enable MD033 -->
+
+---
+
+## Troubleshooting
+
+### What happens if my USB flash device fails? Do I have to repurchase a license? {#usb-failure-license}
+
+No, you do not need to repurchase your license if your USB flash device fails.
+
+To transfer your license:
+
+1. Prepare a new, high-quality [USB flash device](../getting-started/set-up-unraid/create-your-bootable-media.mdx).
+2. Install Unraid OS on the new device using the USB Flash Creator or a manual method.
+3. Boot your server with the new flash device.
+4. Go to ***Tools → Registration*** in the %%WebGUI|web-gui%%.
+5. Click **Replace Key** and follow the prompts to transfer your license to the new device.
+
+The first transfer can be done at any time, while subsequent transfers are allowed once every 12 months using the automated system. If you need to transfer your license again before the 12-month period, contact Unraid support with your old and new USB %%GUID|guid%%s for manual assistance.
+
+:::tip
+
+Routinely back up your USB device using [Unraid Connect](../../unraid-connect/overview-and-setup.mdx) to simplify recovery and avoid data loss.
+
+:::
+
+### What should I do if I get an error registering my flash device: '####-####-####-#############' is already registered to another user? {#guid-error}
+
+This error indicates that your USB flash device does not have a unique hardware ID (%%GUID|guid%%), which prevents it from being registered with the Unraid OS. To resolve this issue, use a different USB flash drive. Brands known for having unique %%GUID|guid%%s include Lexar, Samsung, Kingston, and PNY.
+
+---
+
+## Trial Licenses
+
+### How do Unraid trials work? {#trial-license}
+
+- Trial licenses last 30 days and provide full Unraid functionality without a storage device limit.
+- You'll need a quality USB flash drive and the Unraid USB Creator tool.
+- Consult the [Getting Started guide](../getting-started/set-up-unraid/create-your-bootable-media.mdx) for server setup instructions.
+- Trial licenses require an internet connection at boot for initial validation.
+- When your trial expires, the array will stop. You may then purchase a license key or request a trial extension.
+- You can extend your trial for 15 more days if you need more time to evaluate Unraid. You can do this twice for a total of 60 days (details below).
+
+### How do I extend my trial? {#extend-trial}
+
+Unraid trial registration keys last for 30 days and can be extended twice for 15 additional days each time. After two trial extensions, no additional extensions can be granted. To request an extension, you must stop the array, navigate to the **Tools > Registration** page, and click "Request Extension."
+
+If the two additional extensions were not used and this option does not appear for you, or if it's not working for any reason, please send us the flash drive GUID from **Tools > Registration** to [contact@unraid.net](mailto:contact@unraid.net) or via our support portal at [support.unraid.net](https://support.unraid.net/support/home) and we will be happy to assist.
+
+### Can I transfer my trial key to a new flash device? {#trial-key-transfer}
+
+No, trial registrations are only valid on the original USB flash device. If you want to purchase a license, you can transfer your configuration to a new flash device and then purchase a registration key; however, the trial cannot be continued on a new device.

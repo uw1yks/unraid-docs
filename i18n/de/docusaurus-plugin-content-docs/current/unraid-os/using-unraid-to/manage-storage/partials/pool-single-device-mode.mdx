@@ -1,0 +1,12 @@
+Im **Einzelgerätmodus** besteht Ihr %%cache pool|cache-pool%% aus genau einem Laufwerk. Das bedeutet:
+
+- **Keine Redundanz:** Fällt das Gerät aus, gehen alle Daten verloren, die noch nicht auf das %%array|array%% übertragen wurden.
+- **Dateisystemoptionen:** Sie können andere Dateisysteme als %%BTRFS|btrfs%% verwenden, wie %%XFS|xfs%% oder %%ZFS|zfs%%.
+
+:::important
+
+Wenn Sie im Einzelgerätmodus ein anderes Dateisystem als %%BTRFS|btrfs%% oder %%ZFS|zfs%% wählen und später weitere Geräte in den Pool aufnehmen möchten, müssen Sie das Gerät zuerst als %%BTRFS|btrfs%% oder %%ZFS|zfs%% neu formatieren. Deshalb ist %%BTRFS|btrfs%% auch im Ein-Laufwerk-Betrieb der Standarddateisystemtyp für %%cache pools|cache-pool%%. Sowohl %%BTRFS|btrfs%% als auch %%ZFS|zfs%% unterstützen das spätere Hinzufügen weiterer Geräte, um gespiegelt zu arbeiten. Weitere Informationen zur Dateisystemwahl und Kompatibilität finden Sie unter [Dateisysteme](../file-systems.mdx).
+
+:::
+
+Der Einzelgeräte-Modus ist unkompliziert. Sie können das Gerät einfach hinzufügen oder entfernen, haben jedoch keine Optionen für erweiterte Funktionen wie Redundanz oder Erweiterung.

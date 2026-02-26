@@ -1,0 +1,311 @@
+/**
+ * Minimal custom CSS for Unraid Docs
+ * Preserves only glossary functionality while maintaining default Docusaurus appearance
+ */
+
+/* ===========================
+   Minimal Unraid Branding
+   =========================== */
+
+:root {
+  /* Keep Unraid primary colors for branding */
+  --ifm-color-primary: #E94129;
+  --ifm-color-primary-dark: #d13a24;
+  --ifm-color-primary-darker: #c63522;
+  --ifm-color-primary-darkest: #a32b1c;
+  --ifm-color-primary-light: #ec5a44;
+  --ifm-color-primary-lighter: #ed6350;
+  --ifm-color-primary-lightest: #f08575;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #F3622D;
+  --ifm-color-primary-dark: #e55a28;
+  --ifm-color-primary-darker: #df5525;
+  --ifm-color-primary-darkest: #b8451e;
+  --ifm-color-primary-light: #f47a42;
+  --ifm-color-primary-lighter: #f5824a;
+  --ifm-color-primary-lightest: #f7a06e;
+}
+
+/* ===========================
+   Glossary Terms - Preserved Functionality
+   =========================== */
+
+/* Glossary terms - orange color preserved */
+a[href*="glossary#"] {
+  color: #FE872F !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+a[href*="glossary#"]:hover {
+  color: #E94129 !important;
+}
+
+/* Additional selectors for different plugin outputs */
+a[data-glossary],
+a[class*="glossary"],
+a[class*="term"],
+a[title*="glossary"],
+a[title*="definition"] {
+  color: #FE872F !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+a[data-glossary]:hover,
+a[class*="glossary"]:hover,
+a[class*="term"]:hover,
+a[title*="glossary"]:hover,
+a[title*="definition"]:hover {
+  color: #E94129 !important;
+}
+
+.glossary-term {
+  color: #FE872F !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+.glossary-term:hover {
+  color: #E94129 !important;
+}
+
+.glossary-term:visited,
+.glossary-term:active {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+/* ===========================
+   Glossary Tooltip Styling - Preserved
+   =========================== */
+
+/* Main tooltip container - preserve word wrapping and sizing */
+.styles-module_tooltip__mnnfp {
+  max-width: 250px !important;
+  min-width: 150px !important;
+  width: auto !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  line-height: 1.4 !important;
+  font-size: 14px !important;
+  padding: 12px 16px !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Light theme tooltip colors */
+.styles-module_light__Z6W-X {
+  background-color: #ffffff !important;
+  color: #2c3e50 !important;
+  border: 1px solid #e9ecef !important;
+}
+
+/* Dark theme tooltip colors */
+.styles-module_dark__xNqje {
+  background-color: #1a1a1a !important;
+  color: #f0f6fc !important;
+  border: 1px solid #30363d !important;
+}
+
+/* Tooltip arrows */
+.styles-module_light__Z6W-X .core-styles-module_arrow__cvMwQ {
+  background-color: #ffffff !important;
+}
+
+.styles-module_dark__xNqje .core-styles-module_arrow__cvMwQ {
+  background-color: #1a1a1a !important;
+}
+
+/* Responsive tooltip sizing */
+@media (max-width: 768px) {
+  .styles-module_tooltip__mnnfp {
+    max-width: 200px !important;
+    min-width: 120px !important;
+    font-size: 13px !important;
+    padding: 10px 14px !important;
+  }
+}
+
+/* Tooltip links */
+.styles-module_tooltip__mnnfp a {
+  color: inherit !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
+}
+
+.styles-module_light__Z6W-X a {
+  color: #E94129 !important;
+}
+
+.styles-module_dark__xNqje a {
+  color: #F3622D !important;
+}
+
+.styles-module_light__Z6W-X a:hover {
+  color: #d13a24 !important;
+}
+
+.styles-module_dark__xNqje a:hover {
+  color: #e55a28 !important;
+}
+
+/* ===========================
+   Utility Classes - Preserved
+   =========================== */
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+  flex-wrap: nowrap;
+}
+
+.flex-figure {
+  text-align: center;
+  max-width: 350px;
+}
+ 
+.flex-figure img {
+  width: 100%;
+  height: auto;
+}
+
+.caption-center {
+  text-align: center;
+  font-style: italic;
+  color: var(--ifm-color-content-secondary);
+  margin-top: 0.1rem;
+  font-size: 0.9em;
+}
+
+.anchor-fix {
+  scroll-margin-top: 128px;
+}
+
+/* External link icons */
+a[href^="http"]:not([href*="docs.unraid.net"]):not([href*="releases.unraid.net"]):not([href*="localhost"]):not([href*="127.0.0.1"])::after {
+  content: "↗";
+  display: inline-block;
+  margin-left: 0.25em;
+  font-size: 0.8em;
+  font-weight: bold;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+a[href^="http"]:not([href*="docs.unraid.net"]):not([href*="localhost"]):not([href*="127.0.0.1"]):hover::after {
+  transform: translate(1px, -1px);
+}
+
+/* Scroll behavior */
+html {
+  scroll-padding-top: 70px;
+}
+
+[id] {
+  scroll-margin-top: 70px;
+}
+
+/* Auto-expand details when targeted */
+details:target {
+  open: true;
+}
+
+/* ===========================
+   Iframe Styles - Preserved
+   =========================== */
+
+/* Hide navbar/header completely */
+/* Note: This hides the main navbar and mobile navbar sidebar, but NOT the doc sidebar (theme-doc-sidebar-container) */
+div[data-iframe="true"] .theme-layout-navbar,
+div[data-iframe="true"] .theme-layout-navbar-sidebar,
+div[data-iframe="true"] .navbar-sidebar,
+div[data-iframe="true"] header,
+div[data-iframe="true"] .navbar__items:not(.navbar__items--right),
+div[data-iframe="true"] .navbar__brand {
+  display: none !important;
+}
+
+/* Hide footer completely */
+div[data-iframe="true"] .theme-layout-footer,
+div[data-iframe="true"] .footer,
+div[data-iframe="true"] footer {
+  display: none !important;
+}
+
+/* Hide pagination navigation */
+div[data-iframe="true"] nav.pagination-nav {
+  display: none !important;
+}
+
+div[data-iframe="true"] .iframe-back-button {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: var(--ifm-color-primary);
+  color: var(--ifm-button-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+div[data-iframe="true"] .iframe-back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+}
+
+div[data-iframe="true"] .iframe-back-button:focus-visible {
+  outline: 2px solid var(--ifm-color-primary-dark);
+  outline-offset: 4px;
+}
+
+div[data-iframe="true"] .iframe-back-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+div[data-iframe="true"] .iframe-back-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: currentColor;
+}
+
+/* ===========================
+   Legacy Styles - Minimal Preservation
+   =========================== */
+
+div[class^="announcementBar_"] {
+  font-weight: 700;
+  background: linear-gradient(to right, #E94129 0%, #EC8572 100%);
+}
+
+navpath {
+  display: inline-flex;
+  justify-content: center;
+  vertical-align: baseline;
+  height: 24px;
+  width: auto;
+  line-height: 23px;
+  border-radius: 0.5rem;
+  padding-right: 5px;
+  padding-left: 5px;
+  outline: 1px solid #363535;
+  outline-offset: -2px;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+  background-color: #F6B686;
+  color: #363535;
+  font-size: 16px;
+  font-weight: bold; 
+}

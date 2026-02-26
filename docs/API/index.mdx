@@ -1,0 +1,55 @@
+---
+title: Welcome to Unraid API
+description: The official GraphQL API for Unraid server management and automation
+sidebar_position: 1
+---
+
+<!-- markdownlint-disable MD025 MD033 -->
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import GetStartedV72 from './partials/get-started-v72.mdx';
+import GetStartedPre72 from './partials/get-started-pre72.mdx';
+
+# Welcome to Unraid API
+
+Starting with Unraid 7.2, the API comes built into the operating system - no plugin installation required.
+
+The Unraid API provides a %%GraphQL|graphql%% interface for programmatic interaction with your Unraid server. It enables automation, monitoring, and integration capabilities through a modern, strongly-typed API with multiple authentication methods (API keys, session cookies, and %%SSO|sso%%/OIDC), comprehensive system coverage, and built-in developer tools.
+
+## Availability
+
+### Native integration (Unraid 7.2+)
+
+Starting with Unraid 7.2, the API is integrated directly into the operating system:
+
+- No plugin installation required
+- Automatically available on system startup
+- Deep system integration
+- Access through ***Settings → Management Access → API***
+
+### Plugin installation (Pre-7.2 and Advanced Users)
+
+For Unraid versions prior to 7.2, or to access newer API features:
+
+1. Install the [Unraid Connect](../unraid-connect/overview-and-setup.mdx) plugin from [Community Applications](../unraid-os/using-unraid-to/run-docker-containers/community-applications.mdx).
+2. [Configure the plugin](./how-to-use-the-api.mdx#enabling-the-graphql-sandbox).
+3. Access API functionality through the %%GraphQL|graphql%% Sandbox.
+
+The [Unraid Connect](../unraid-connect/overview-and-setup.mdx) plugin provides the API for pre-7.2 versions. You do **not** need to sign in to Unraid Connect to use the API locally. Installing the plugin on Unraid 7.2+ gives you access to newer API features before they're included in OS releases.
+
+## Get started
+
+<Tabs>
+  <TabItem value="v72" label="Unraid 7.2+" default>
+    <GetStartedV72 />
+  </TabItem>
+
+  <TabItem value="older" label="Pre-7.2 Versions">
+    <GetStartedPre72 />
+  </TabItem>
+</Tabs>
+
+For detailed usage instructions, see the [CLI Commands](./cli) reference.
+
+<!-- markdownlint-enable MD025 MD033 -->

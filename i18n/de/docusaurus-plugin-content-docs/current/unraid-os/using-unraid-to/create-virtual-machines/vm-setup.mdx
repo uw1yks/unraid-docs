@@ -1,0 +1,582 @@
+---
+sidebar_position: 2
+sidebar_label: VM-Einrichtung
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# VM-Einrichtung
+
+Das Einrichten einer %%VM|vm%% auf Unraid ist eine flexible Möglichkeit, vollständige Betriebssysteme - wie Windows, Linux oder andere Plattformen - parallel zu Ihren Containern und nativen Anwendungen zu betreiben. Egal, ob Sie neue Software testen, Legacy-Anwendungen ausführen, eine Desktop-Umgebung hosten oder Hardware-Passthrough für Gaming oder kreative Arbeit nutzen möchten, Unraids **VM Manager** macht den Prozess für alle Erfahrungsstufen zugänglich.
+
+:::tip[New in Unraid 7.0]
+
+Schauen Sie sich den Abschnitt [%%VM|vm%%-Manager-Funktionen](#neues-in-unraid-7x-vm-manager) für weitere Details an.
+:::
+
+- %%VM|vm%%-Klone und -Snapshots
+- Benutzerdefinierte %%VM|vm%%-Vorlagen
+- Inline-XML-Bearbeitung/Ansicht
+- Erweiterte Funktionen für GPU-Sharing und -Passthrough
+
+Schauen Sie sich den Abschnitt [%%VM|vm%%-Manager-Funktionen](#neues-in-unraid-7x-vm-manager) für weitere Details an.
+
+:::
+
+Mit vorbereitetem System und festgelegten Präferenzen können Sie mithilfe des %%WebGUI|web-gui%% eine neue %%virtuelle Maschine (VM)|vm%% erstellen.
+
+## Erstellen Ihrer eigenen virtuellen Maschinen {#creating-your-own-virtual-machines}
+
+Nachdem Ihr System vorbereitet und die Einstellungen vorgenommen sind, können Sie über das %%WebGUI|web-gui%% eine neue %%VM|vm%% erstellen.
+
+:::note[Before Sie beginnen]
+
+- Klicken Sie auf **VM hinzufügen** auf der Seite **Virtuelle Maschinen**.
+- Laden Sie Ihr Betriebssystem-Installations-ISO und für Windows %%VMs|vm%% die neuesten %%VirtIO|virtio%%-Treiber-ISOs in den `isos` Share hoch.
+- Entscheiden Sie, ob Sie %%GPU-Passthrough|gpu-passthrough%% oder %%VNC|vnc-session%% für die Grafik verwenden möchten.
+
+:::note[Bevor Sie beginnen]
+
+- Klicken Sie auf **VM hinzufügen** auf der Seite **Virtuelle Maschinen**.
+- Laden Sie Ihr Betriebssystem-Installations-ISO und für Windows %%VMs|vm%% die neuesten %%VirtIO|virtio%%-Treiber-ISOs in den `isos` Share hoch.
+- Entscheiden Sie, ob Sie %%GPU-Passthrough|gpu-passthrough%% oder %%VNC|vnc-session%% für die Grafik verwenden möchten.
+
+:::
+
+Unraid 7.1+ führt Benutzer-%%VM|vm%%-Vorlagen ein, die das Speichern und Wiederverwenden Ihrer benutzerdefinierten %%VM|vm%%-Konfigurationen erleichtern. Benutzer-Vorlagen vereinfachen die %%VM|vm%%-Bereitstellung und sorgen für Konsistenz in den Setups.
+
+1. Klicken Sie auf **VM hinzufügen** auf der Seite **Virtuelle Maschinen**.
+2. Setzen Sie die **Vorlage** auf **Benutzerdefiniert** oder wählen Sie eine vordefinierte OS-Vorlage für gängige Distributionen.
+3. Geben Sie einen **Namen** und optional eine **Beschreibung** für Ihre %%VM|vm%% ein.
+4. Aktivieren Sie **Autostart**, wenn Sie möchten, dass die %%VM|vm%% automatisch mit dem %%array|array%% gestartet wird.
+5. Wählen Sie den Typ des **Betriebssystems** aus. Dadurch wird auch das %%VM|vm%%-Symbol angepasst.
+6. Weisen Sie der %%VM|vm%% **CPU-Kerne** zu. Sie können bis zu der Anzahl der auf Ihrem Host verfügbaren physischen Kerne zuweisen.
+7. Legen Sie den **Initialspeicher** (RAM) für die %%VM|vm%% fest. Konsultieren Sie die Dokumentation Ihres Gastbetriebssystems für empfohlene Werte.
+8. Wählen Sie das **OS-Installations-ISO** aus Ihrer **isos** Freigabe.
+9. Konfigurieren Sie den **primären vDisk** (Ort, Größe und Typ).
+   - Die primäre %%vDisk|vdisk%% speichert das Betriebssystem der VM.
+   - Fügen Sie bei Bedarf zusätzliche %%vDisks|vdisk%% mithilfe des Pluszeichens hinzu.
+10. Wählen Sie eine **Grafikkarte**:
+    - Wählen Sie %%VNC|vnc-session%% für den Fernzugriff oder eine physische GPU für Passthrough.
+    - Weisen Sie eine USB-Tastatur/Maus zu, wenn eine physische GPU verwendet wird.
+    - Legen Sie ein %%VNC|vnc-session%%-Passwort fest, falls gewünscht.
+11. Weisen Sie eine **Soundkarte** zu (optional, aber erforderlich für HDMI-Audio über GPU).
+12. Weisen Sie bei Bedarf **USB-Geräte** zu.
+    - Geräte müssen vor dem Start der %%VM|vm%% angeschlossen werden (USB-Hotplug wird nicht unterstützt).
+    - Das Unraid-USB-Flash-Gerät steht nicht zur Zuweisung zur Verfügung.
+13. Klicken Sie auf **VM erstellen**. Die %%VM|vm%% startet automatisch, es sei denn, Sie deaktivieren **VM nach Erstellung starten**.
+
+---
+
+## Benutzerdefinierte VM-Vorlagen
+
+Unraid 7.1+ führt Benutzer-%%VM|vm%%-Vorlagen ein, die das Speichern und Wiederverwenden Ihrer benutzerdefinierten %%VM|vm%%-Konfigurationen erleichtern. Benutzer-Vorlagen vereinfachen die %%VM|vm%%-Bereitstellung und sorgen für Konsistenz in den Setups.
+
+Erstellen einer Benutzervorlage:
+
+1. Bewegen Sie den Mauszeiger über eine Benutzervorlage und klicken Sie auf den Pfeil, um sie auf Ihren Server zu exportieren oder herunterzuladen.
+2. Verwenden Sie auf einem anderen Unraid-System **Import aus Datei** oder **Hochladen**, um die Vorlage hinzuzufügen.
+3. Ihre Vorlage ist jetzt im Bereich Benutzervorlagen auf dem **VM hinzufügen**-Bildschirm verfügbar.
+
+Um eine Benutzervorlage zu verwenden:
+
+- Auf der **VMs**-Seite klicken Sie auf **VM hinzufügen** und wählen Ihre Vorlage im Abschnitt **Benutzer-Vorlagen** aus.
+
+Unraid 7.x führt eine Reihe leistungsstarker Erweiterungen für den **%%VM|vm%%-Manager** ein, die den Prozess des Ausführens und Verwalten von %%virtuellen Maschinen|vm%% vereinfachen. Diese Funktionen richten sich sowohl an Anfänger als auch an fortgeschrittene Benutzer und vereinfachen die Bereitstellung, Anpassung und Optimierung Ihrer %%VMs|vm%%.
+
+- Bewegen Sie den Mauszeiger über eine Benutzervorlage und klicken Sie auf den Pfeil, um sie auf Ihren Server zu exportieren oder herunterzuladen.
+- Verwenden Sie auf einem anderen Unraid-System **Import aus Datei** oder **Hochladen**, um die Vorlage hinzuzufügen.
+
+---
+
+## Neu in Unraid 7.x: VM-Manager {#neues-in-unraid-7x-vm-manager}
+
+Unraid 7.x führt eine Reihe leistungsstarker Verbesserungen für den **%%VM|vm%% Manager** ein, die den Prozess des Betriebs und Managements von %%VMs|vm%% vereinfachen. Diese Funktionen richten sich sowohl an Anfänger als auch an fortgeschrittene Benutzer und erleichtern das Einrichten, Anpassen und Optimieren Ihrer %%VMs|vm%%.
+
+:::tip\[Highlights]
+
+- Sparen Sie Zeit mit %%VM|vm%%-Klone, Snapshots und wiederverwendbaren Vorlagen
+- Optimieren Sie Leistung und Kompatibilität mit erweiterten Passthrough- und Speicheroptionen
+- Genießen Sie verbesserte Sichtbarkeit und Kontrolle mit Nutzungsstatistiken und Inline-`XML`-Bearbeitung
+
+:::
+
+<details>
+  <summary><strong>Erweiterte Grafik- und GPU-Sharing-Optionen</strong></summary>
+
+  - **%%VM|vm%%-Klonen & [Snapshots](#vm-snapshots):** Vervielfältigen Sie %%VMs|vm%% oder speichern/wiederherstellen Sie ihren Zustand schnell für Tests oder Backups.
+  - **Benutzer %%VM|vm%% Vorlagen:** Speichern Sie Ihre benutzerdefinierten %%VM|vm%%-Konfigurationen und setzen Sie neue %%VMs|vm%% mit nur wenigen Klicks ein.
+  - **Inline-XML-Ansicht/Bearbeitung**: Betrachten oder kopieren Sie das vom %%WebGUI|web-gui%% generierte `XML` sofort; wechseln Sie in den `XML`-Modus für erweiterte Bearbeitungen.
+  - **Autostart deaktivieren:** Wählen Sie aus, welche %%VMs|vm%% automatisch mit Ihrem %%array|array%% starten.
+  - Timer/Offset-Konfigurationsoptionen
+</details>
+
+<details>
+  <summary><strong>Workflow-Verbesserungen</strong></summary>
+
+  - **PCI-Multifunktion/andere**: Weisen Sie komplexe PCI-Geräte oder Gruppen für fortgeschrittene Passthrough-Szenarien zu.
+  - **%%QEMU|qemu%%-Befehlszeilen-Passthrough**: Fügen Sie benutzerdefinierte %%QEMU|qemu%%-Argumente für eine Expertenstufe %%VM|vm%%-Feinabstimmung hinzu.
+  - **Speicherüberschreibung**: Geben Sie den Speicherort für jeden virtuellen %%Disk|vdisk%% der VM an.
+  - **SSD-Flag & Unmap**: Optimieren Sie die %%vDisk|vdisk%%-Leistung für SSDs und aktivieren Sie Discard/Unmap-Unterstützung.
+  - **`SR-IOV` für Intel-iGPU**: Teilen Sie integrierte Intel-Grafiken zwischen mehreren %%VMs|vm%%.
+  - **VM-Namen-Validierung für ZFS**: Verhindern Sie die Verwendung unzulässiger Zeichen in %%VM|vm%%-Namen für [%%ZFS|zfs%%-Pools](../../advanced-configurations/optimize-storage/zfs-storage.mdx).
+</details>
+
+<details>
+  <summary><strong>Erweiterte Hardware- und Speicheroptionen</strong></summary>
+
+  - **`VirGL` & `QXL` virtuelle GPUs**: Teilen Sie Intel/AMD-GPUs zwischen mehreren Linux-%%VMs|vm%% oder nutzen Sie `QXL` für Multi-Screen/Memory-Optionen.
+  - **%%CPU-Pinning|cpu-pinning%% optional**: Lassen Sie Unraid die CPU-Zuteilung automatisch verwalten oder pinnen Sie Kerne manuell nach Bedarf.
+</details>
+
+<details>
+  <summary><strong>Erweiterte Grafik- und GPU-Sharing-Optionen</strong></summary>
+
+  - View all graphics cards and %%VM|vm%%-assigned IP addresses in the %%VM|vm%% tab
+  - Unterstützung für %%QEMU|qemu%% PPC64-Ziel und `qemu:override`
+  - Hypervclock-Unterstützung für Windows-%%VMs|vm%%
+  - „Wanderbar“ an/aus für die emulierte CPU
+  - Timer/Offset-Konfigurationsoptionen
+  - Keine Keymap/nogpu-Optionen für spezifische Anwendungsfälle verfügbar
+  - Verbesserte Auswahl und Bearbeitung von %%VM|vm%%-Icons
+  - Warnungen bei der Zuweisung der primären GPU als Passthrough (kann `vBIOS` erfordern)
+  - Starten Sie Unraid-%%VMs|vm%% im GUI-Modus mit dem `QXL`-Videotreiber
+  - Verschiedene Lösungen für Pfad- und Icon-Probleme in `XML`-Ansicht
+</details>
+
+---
+
+## Erweiterte Optionen {#vm-snapshots}
+
+VM-Snapshots ermöglichen es Ihnen, den aktuellen Zustand Ihrer %%VM|vm%% zu einem bestimmten Zeitpunkt zu speichern. Sie können zu diesem Zustand zurückkehren, falls etwas schiefgeht, oder Snapshots nutzen, um Änderungen sicher zu testen. Dies ist besonders nützlich, bevor Sie neue Software installieren, Konfigurationsänderungen vornehmen oder Systemupdates durchführen.
+
+:::info[How tipps]
+
+Wenn Sie einen Snapshot erstellen, generiert Unraid eine "Overlay-Datei", die alle nach diesem Zeitpunkt vorgenommenen Änderungen an Ihrer VM erfasst. Sie können es sich so vorstellen:
+
+- **Original-VM-Disk**: Dies stellt den aktuellen Zustand Ihrer VM dar (ähnlich einem Foto).
+- **Snapshot-Overlay**: Dies ist eine separate Datei, die alle nach dem Snapshot vorgenommenen Änderungen aufzeichnet (wie eine Liste von Bearbeitungen).
+- **VM läuft weiter**: Ihre VM nutzt sowohl die Originaldisk als auch die Overlay-Datei zusammen.
+
+Diese Einrichtung ermöglicht es Ihnen, mehrere Snapshots zu erstellen, wobei jeder eine eigene Overlay-Datei erzeugt. So können Sie problemlos zu einem beliebigen vorherigen Zustand zurückkehren.
+
+Bevor Sie eine GPU oder ein anderes PCI-Gerät einer %%virtuellen Maschine|vm%% zuweisen können, ist es wichtig, das Gerät an den **vfio-pci** Treiber zu "binden". Dieser Prozess verbirgt das Gerät vor Unraid und widmet es ausschließlich Ihrer %%VM|vm%%.
+
+1. Sie erstellen einen Snapshot namens "Saubere Windows-Installation".
+2. Sie installieren einige Software und nehmen Änderungen vor.
+3. Sie erstellen einen weiteren Snapshot namens "Nach der Software-Installation".
+4. Sie können nun entweder zur sauberen Installation oder zum Zustand nach der Softwareinstallation zurückkehren.
+5. Sie können auch Block Commit oder Block Pull verwenden, um Änderungen dauerhaft zu machen.
+
+:::
+
+<Tabs>
+  <TabItem value="erstellen" label="Snapshots erstellen" default>
+    Um eine Snapshot Ihrer %%VM|vm%% zu erstellen:
+
+    1. Gehen Sie zur **VMs**-Seite im %%WebGUI|web-gui%%.
+    2. Klicken Sie auf den %%VM|vm%%-Namen, um Details zu erweitern.
+    3. Suchen Sie nach dem Abschnitt **Snapshots** und klicken Sie auf **Snapshot erstellen**.
+    4. Geben Sie einen beschreibenden Namen für Ihren Snapshot ein (zum Beispiel "Vor dem Windows-Update" oder "Zustand der sauberen Installation").
+    5. **Speicherabbild-Option**: In den aktuellen Unraid-Versionen ist das Kontrollkästchen "Speicherabbild" standardmäßig nicht ausgewählt. Wenn Sie es auswählen, wird der RAM der %%VM|vm%% für ein vollständiges speicherunterstütztes Snapshot eingeschlossen (erfasst den laufenden Zustand, ist jedoch größer und langsamer zu erstellen/wiederherstellen). Wenn es unausgewählt bleibt, wird ein reines Festplattensnapshot erstellt (kleiner und schneller, aber alle nicht gespeicherten In-Memory-Daten gehen verloren). Entscheiden Sie basierend darauf, ob Sie vollständige Live-Zustandserhaltung oder nur Datenträgerwiederherstellung benötigen.
+    6. Klicken Sie auf **Erstellen**, um den Snapshot zu speichern.
+
+    :::tip[Beste Praktiken]
+
+    - Erstellen Sie Snapshots, bevor Sie wesentliche Änderungen an Ihrer %%VM|vm%% vornehmen.
+    - Verwenden Sie beschreibende Namen, die Ihnen helfen, sich zu erinnern, was der Snapshot enthält.
+    - Wählen Sie Speicherabbild basierend auf Ihren Bedürfnissen: aktivieren Sie es für vollständige Live-Zustandserhaltung oder deaktivieren Sie es für schnellere Festplattennrecovery.
+    - Bewahren Sie Schnappschüsse für wichtige Meilensteine auf, aber löschen Sie alte, um Speicherplatz zu sparen.
+      :::
+  </TabItem>
+
+  <TabItem value="verwalten" label="Snapshots verwalten">
+    Sobald Sie Snapshots haben, werden sie im Detailabschnitt der %%VM|vm%% aufgelistet angezeigt. Jeder Snapshot zeigt:
+
+    - **Name**: Der Name, den Sie dem Snapshot gegeben haben.
+    - **Datum**: Wann der Snapshot erstellt wurde.
+    - **Größe**: Wie viel Speicherplatz er benötigt.
+
+    Um Snapshots zu verwalten:
+
+    1. Wechseln Sie zur Registerkarte **VMs** im %%WebGUI|web-gui%%.
+    2. Klicken Sie auf den %%VM|vm%%-Namen, um Details zu erweitern.
+    3. Navigieren Sie zum Abschnitt **Snapshots**.
+    4. Verwenden Sie die verfügbaren Schaltflächen für **Zurücksetzen**, **Block Commit**, **Block Pull** oder **Entfernen**.
+
+    :::tip
+    **Schnappschuss wiederherstellen**: Dies stellt Ihre %%VM|vm%% genau so wieder her, wie es war, als der Schnappschuss erstellt wurde. Alle nach dem Schnappschuss vorgenommenen Änderungen gehen verloren. Die VM verwendet die ursprüngliche Datenträgerdatei, als hätte der Schnappschuss nie existiert.
+
+    **Block Commit**: Dieser Prozess kopiert alle Änderungen aus dem Snapshot-Overlay zurück in die ursprüngliche %%VM|vm%%-Festplattendatei. Standardmäßig sind die Optionen "Pivot" und "Löschen" ausgewählt:
+
+    - **Pivot**: Diese Option schaltet Ihre VM von der Nutzung der Overlay-Datei zurück zur ursprünglichen Festplattendatei um. Nach dem Commit wird Ihre VM die ursprüngliche Festplatte nutzen (die nun die Änderungen enthält) anstatt der Overlay-Datei.
+
+    - **Löschen**: Diese Option entfernt die Snapshot-Overlay-Datei, nachdem die Änderungen auf die ursprüngliche Festplatte übernommen wurden.
+
+    - **Zusammen ("Pivot" + "Löschen")**:
+      - **Mit beiden ausgewählt**: Änderungen werden auf die Originaldatei übernommen, Ihre VM wechselt zurück zur Nutzung der Originalfestplatte, und die Overlay-Datei wird gelöscht. Dies ist die gebräuchlichste Wahl.
+      - **Mit beiden nicht ausgewählt**: Änderungen werden auf die Originaldatei übernommen, aber Ihre VM nutzt weiterhin die Overlay-Datei, und die Overlay-Datei bleibt erhalten, um zukünftige Änderungen zu erfassen.
+
+    Verwenden Sie Block Commit, wenn Sie mit den Änderungen zufrieden sind und diese dauerhaft machen möchten.
+
+    **Block Pull**: Dies fusioniert die Originalfestplattendaten mit der Snapshot-Overlay-Datei und macht diese vollständig und unabhängig. Ihre VM nutzt weiterhin die Overlay-Datei, aber sie ist nicht mehr abhängig von der ursprünglichen Festplatte. Nutzen Sie dies, wenn Sie den aktuellen Zustand beibehalten und den Snapshot permanent machen möchten.
+
+    **Schnappschuss entfernen**: Dies löscht einfach die Schnappschuss-Overlay-Datei, ohne Ihre %%VM|vm%% zu beeinflussen. Ihre %%VM|vm%% verwendet weiterhin die ursprüngliche Datenträgerdatei, und alle nach dem Schnappschuss vorgenommenen Änderungen gehen verloren.
+    :::
+  </TabItem>
+
+  <TabItem value="zurückstellen" label="Zurück zu Snapshots wechseln">
+    Wenn Sie zu einem vorherigen Zustand zurückkehren müssen:
+
+    1. Stoppen Sie die %%VM|vm%%, wenn sie derzeit läuft.
+    2. Wechseln Sie zur Registerkarte **VMs** im %%WebGUI|web-gui%%.
+    3. Klicken Sie auf den %%VM|vm%%-Namen, um Details zu erweitern.
+    4. Navigieren Sie zum Abschnitt **Snapshots**.
+    5. Finden Sie den Snapshot, den Sie wiederherstellen möchten, und klicken Sie auf die Schaltfläche **Zurücksetzen**.
+    6. Bestätigen Sie, dass Sie zurücksetzen möchten (dies führt zum Verlust aller nach dem Snapshot vorgenommenen Änderungen).
+    7. Starten Sie Ihre %%VM|vm%% - sie wird jetzt genauso sein, wie sie war, als Sie den Snapshot erstellt haben.
+
+    :::caution[Datenverlust-Warnung]
+    Wenn Sie zu einem Schnappschuss zurückkehren, werden alle Änderungen gelöscht, die nach der Erstellung dieses Schnappschusses vorgenommen wurden. Stellen Sie sicher, dass Sie diese Änderungen wirklich verlieren möchten, bevor Sie zurückkehren.
+    :::
+  </TabItem>
+</Tabs>
+
+### Snapshot-Speicherung
+
+Snapshots verwenden Speicherplatz auf Ihrem System. Jeder Snapshot speichert nur die Unterschiede zwischen dem aktuellen Zustand und dem Snapshot-Zustand; diese Unterschiede können jedoch im Laufe der Zeit zunehmen.
+
+Hier sind einige Punkte zu beachten:
+
+- **QCOW2-Festplatten** unterstützen Snapshots und funktionieren gut mit dieser Funktion.
+- **Storage location**: Snapshots are stored with your %%VM|vm%% files, so make sure you have enough space on your %%cache pools|cache-pool%% or %%array|array%%.
+
+- Snapshot-Metadaten werden in `/etc/libvirt/qemu/snapshotdb/VM_name/` gespeichert.
+- Snapshot-Daten werden zusammen mit Ihren %%VM|vm%%-Dateien auf %%Cache-Pools|cache-pool%% oder %%Array|array%% gespeichert.
+
+:::info[Advanced Snapshoterweiterungen]
+
+Für detailliertere technische Informationen darüber, wie VM-Snapshots funktionieren, einschließlich Blockdiagrammen und fortgeschrittenen Szenarien mit mehreren Snapshots, sehen Sie sich die [QEMU-Snapshots Dokumentation](https://kashyapc.fedorapeople.org/virt/lc-2012/snapshots-handout.html) an.
+
+:::
+
+:::tip[Common Nutzungsfälle]
+
+- **Vor Systemupdates**: Erstellen Sie einen Snapshot, bevor Sie Windows-Updates oder Linux-Paketaktualisierungen installieren. Sollte etwas schiefgehen, können Sie schnell zu einer früheren Version zurückkehren.
+- **Software-Testen**: Installieren Sie neue Anwendungen oder nehmen Sie Konfigurationsänderungen vor. Wenn Sie mit den Ergebnissen nicht zufrieden sind, kehren Sie zu Ihren sauberen %%VM|vm%%-Snapshots von vor den Änderungen zurück.
+- **Entwicklungsarbeit**: Erstellen Sie Snapshots in verschiedenen Phasen Ihres Projekts. Dies ermöglicht Ihnen, frei zu experimentieren und zu bekannten guten Zuständen zurückzukehren.
+- **Backup-Strategie**: Während es kein Ersatz für richtige Backups ist, bieten Snapshots eine schnelle Wiederherstellung für jüngste Änderungen.
+
+:::
+
+---
+
+## Verwendung von virtuellen GPUs und GPU-Sharing
+
+Unraid unterstützt jetzt fortgeschrittenes GPU-Sharing über `VirGL` und `QXL` für Linux-%%VMs|vm%% (und einige Nvidia-GPUs mit dem `Nouveau`-Treiber).
+
+- Um `VirGL` zu verwenden: Stellen Sie **Grafikkarte** auf **Virtuell** und **VM-Konsolen-Video-Treiber** auf **VirtIO(3D)** ein.
+- Um `QXL` zu verwenden: Stellen Sie **Grafikkarte** auf **Virtuell** und **VM-Konsolen-Video-Treiber** auf **`QXL` (beste)**.
+- `VirGL` gibt kein Bild an einen physischen Monitor aus und ist nicht kompatibel mit Windows-%%VMs|vm%% oder Standard-Nvidia-Plugins.
+- `QXL` unterstützt mehrere Bildschirme und konfigurierbaren Videospeicher.
+
+---
+
+## Erweiterte Optionen
+
+<details>
+  <summary>Erweitern Sie diesen Abschnitt, um Anleitungen zu erweiterten Optionen anzuzeigen</summary>
+
+  Wechseln Sie auf der Seite **VM hinzufügen** zur **Erweiterten Ansicht**, um auf zusätzliche Einstellungen zuzugreifen.
+
+  Hier sind die wichtigsten erweiterten Optionen, in fokussierte Abschnitte unterteilt:
+
+  **CPU-Modus:**
+
+  - **Host-Passthrough**: Stellt alle Host-CPU-Funktionen der %%VM|vm%% zur Verfügung, um maximale Leistung zu erzielen.
+  - **Emuliert**: Verwendet ein generisches CPU-Modell, reduziert Kompatibilitätsprobleme, begrenzt jedoch die Leistung.
+
+  **Memory-Ballooning:**
+
+  - Legen Sie einen **Maximalspeicher**-Wert fest, um dynamische Speicherzuordnung (%%memory ballooning|memory-ballooning%%) zu ermöglichen.
+  - Nicht verfügbar für %%VMs|vm%% mit zugewiesenen PCI-Geräten (z.B., %%GPU-Passthrough|gpu-passthrough%%).
+
+  **Maschinentyp:**
+
+  - **`i440fx`**: Standard für Windows-%%VMs|vm%%. Ändern Sie dies nur, wenn Sie Probleme mit %%GPU-Passthrough|gpu-passthrough%% haben.
+  - **`Q35`**: Standard für Linux-%%VMs|vm%% und empfohlen für die meisten modernen Betriebssysteme, insbesondere mit %%GPU-Passthrough|gpu-passthrough%%.
+
+  **BIOS-Typ:**
+
+  - **SeaBIOS**: Traditionelles BIOS für ältere Betriebssysteme.
+  - **OVMF**: %%UEFI|uefi%% BIOS erforderlich für Windows 8+, die meisten modernen Linux-Distros und %%GPU-Passthrough|gpu-passthrough%%.
+
+  :::note
+
+  Der BIOS-Typ kann nur beim Erstellen einer neuen %%VM|vm%% festgelegt werden.
+
+  :::
+
+  **Hyper-V-Erweiterungen:**
+
+  - Für Windows-%%VMs|vm%% aktivieren Sie die Hyper-V-Erweiterungen zur Verbesserung der Kompatibilität und Leistung.
+
+  **VirtIO-Treiber-ISO:**
+
+  - Überschreiben Sie das Standard-%%VirtIO|virtio%%-ISO bei Bedarf, insbesondere für Tests oder bei Verwendung neuerer Treiber.
+
+  **vDisk-Typ:**
+
+  - **`RAW`**: Beste Leistung, weniger flexibel für Snapshots.
+  - **`QCOW2`**: Unterstützt Snapshots, bietet aber etwas geringere Leistung.
+
+  **VirtFS-Zuordnungen (Linux-VMs):**
+
+  - Fügen Sie mehrere %%VirtFS|virtfs%%-(`9p`)-Freigaben für die Dateisystemintegration zwischen Host und Gast hinzu.
+  - Siehe die [%%QEMU|qemu%% 9p-Dokumentation](http://wiki.qemu.org/Documentation/9psetup) für Details.
+
+  **Netzwerkeinstellungen:**
+
+  - Ändern Sie die **Netzwerk-MAC-Adresse** oder wählen Sie eine alternative **Netzwerkbrücke** aus.
+  - Klicken Sie auf das Aktualisierungssymbol, um automatisch eine neue MAC-Adresse zu generieren.
+  - Fügen Sie bei Bedarf zusätzliche virtuelle Netzwerkschnittstellen hinzu.
+</details>
+
+:::info[Troubleshooting tipps]
+
+- Wenn Ihre %%VM|vm%% nicht startet, überprüfen Sie Ihre ISO- und %%vDisk|vdisk%%-Pfade.
+- Für %%GPU-Passthrough|gpu-passthrough%%, stellen Sie sicher, dass Ihre Hardware und BIOS-Einstellungen %%IOMMU|iommu%%/VT-d/AMD-Vi unterstützen.
+- Einige USB-Geräte funktionieren möglicherweise nicht zuverlässig mit Passthrough - testen Sie und konsultieren Sie das [Unraid-Forum](https://forums.unraid.net/) für gerätespezifische Ratschläge.
+
+:::
+
+---
+
+## Binden von PCI-Geräten für Passthrough
+
+Bevor Sie eine GPU oder ein PCI-Gerät einer %%VM|vm%% zuweisen können, ist es wichtig, das Gerät an den **vfio-pci**-Treiber zu "binden". Dieser Vorgang verbirgt das Gerät vor Unraid und widmet es ausschließlich Ihrer %%VM|vm%%.
+
+Um ein PCI-Gerät (GPU, USB-Controller, NVMe usw.) für das Passthrough zu binden:
+
+1. Navigieren Sie zu ***Werkzeuge → Systemgeräte*** im %%WebGUI|web-gui%%.
+2. Durchsuchen Sie die Liste aller erkannten PCI-Geräte und ihrer %%IOMMU|iommu%%-Gruppen.
+3. Aktivieren Sie das Kästchen neben jedem Gerät, das Sie an **vfio-pci** binden möchten (um es vor Unraid zu verbergen).
+   - Beachten Sie, dass bereits von Unraid verwendete Geräte (wie Festplattencontroller und Netzwerkkarten) nicht ausgewählt werden können.
+   - Wenn Sie eine GPU auswählen, wählen Sie das zugehörige Soundgerät aus.
+4. Klicken Sie auf **Ausgewählte an VFIO beim Booten binden**, um Ihre Änderungen zu speichern.
+5. Starten Sie Ihren Server neu, damit das Binden wirksam wird.
+
+:::caution
+
+%%GPU-Passthrough|gpu-passthrough%% ermöglicht es Ihnen, eine physische Grafikkarte direkt einer %%virtuellen Maschine (VM)|vm%% zuzuweisen, wodurch nahezu native Leistung für Gaming, kreative Arbeit oder maschinelles Lernen bereitgestellt wird.
+
+:::
+
+Nach dem Binden werden gebundene Geräte im Dropdown-Menü **Andere PCI-Geräte** beim Bearbeiten oder Erstellen einer %%VM|vm%% angezeigt.
+
+<details>
+  <summary>Fehlerbehebung</summary>
+
+  - Wenn Sie zuvor das `VFIO-PCI`-Konfigurations-Plug-in verwendet haben, deinstallieren Sie es - diese Funktionalität ist jetzt integriert.
+  - Um alle Bindungen zurückzusetzen, löschen Sie `/boot/config/vfio-pci.cfg` und starten Sie Ihr System neu.
+  - Nach dem Neustart verwenden Sie die Schaltfläche "**VFIO-PCI-Protokoll anzeigen**" auf der Seite **Systemgeräte** für erweiterte Fehlerbehebung.
+  - Denken Sie daran, dass Unraid möglicherweise nicht ohne GUI startet, wenn Sie Ihre einzige GPU binden. Stellen Sie sicher, dass Sie dafür planen.
+  - Für weitere Informationen, konsultieren Sie den [offiziellen Leitfaden im Unraid-Forum](https://forums.unraid.net/topic/93781-guide-bind-devices-to-vfio-pci-for-easy-passthrough-to-vms/).
+</details>
+
+---
+
+## GPU-Passthrough für virtuelle Maschinen
+
+%%GPU-Passthrough|gpu-passthrough%% ermöglicht es Ihnen, eine physische Grafikkarte direkt einer %%VM|vm%% zuzuweisen und bietet nahezu native Leistung für Spiele, kreative Arbeit oder maschinelles Lernen.
+
+:::info[Why GPU-Durchreichung verwenden?]
+
+- **Leistung:** Direkter Hardwarezugriff für anspruchsvolle Anwendungen.
+- **Kompatibilität:** Grafisch-intensive Workloads ausführen, die eine dedizierte GPU erfordern.
+- **Flexibilität:** Verwandeln Sie Ihren Unraid-Server in eine vielseitige Workstation.
+
+:::
+
+<h4>Voraussetzungen</h4>
+
+**Hardware:**
+
+- CPU mit Intel VT-d oder AMD-Vi Unterstützung (%%IOMMU|iommu%% im BIOS aktiviert).
+- GPU kompatibel mit Passthrough (siehe [community-getestete Hardware](https://docs.google.com/spreadsheets/d/1LnGpTrXalwGVNy0PWJDURhyxa3sgqkGXmvNCIvIMenk/edit#ggid=0)).
+- Ein Motherboard, das PCIe-Geräte richtig isoliert.
+
+Um ein ROM einzuspeisen:
+
+- Unraid 6.9+ mit aktivierter Virtualisierung.
+- %%OVMF|ovmf%% (%%UEFI|uefi%%) BIOS für %%VMs|vm%% (empfohlen gegenüber %%SeaBIOS|seabios%%).
+
+Um GPU-Passthrough einzurichten:
+
+1. Stellen Sie sicher, dass Ihre Hardware %%IOMMU|iommu%% unterstützt und im BIOS aktiviert ist.
+2. Aktivieren Sie Virtualisierungsfunktionen im BIOS (Intel VT-x/VT-d oder AMD-v/AMD-vi).
+3. Aktualisieren Sie Unraid auf die neueste stabile Version.
+4. Weisen Sie die GPU der %%VM|vm%% im %%VM|vm%%-Erstellungs- oder Bearbeitungsbildschirm im Abschnitt Grafikkarte zu.
+5. Weisen Sie eine USB-Tastatur und -Maus der %%VM|vm%% zu, wenn Sie %%GPU-Passthrough|gpu-passthrough%% verwenden.
+6. Verwenden Sie %%OVMF|ovmf%% BIOS für die %%VM|vm%% für bessere Kompatibilität mit %%GPU-Passthrough|gpu-passthrough%%.
+7. Starten Sie die %%VM|vm%% und überprüfen Sie, ob die GPU korrekt durchgereicht wird.
+
+:::note
+
+Einige GPUs erfordern möglicherweise zusätzliche Konfigurationen oder ROM-Injection für das ordnungsgemäße Passthrough.
+
+:::
+
+### Steckenbleiben in der UEFI-Shell {#manual-rom-injection}
+
+Einige GPUs, insbesondere bestimmte NVIDIA-Modelle, erfordern, dass eine ROM-Datei der VM manuell bereitgestellt wird, um ordnungsgemäß zu initialisieren. Dies ist häufig erforderlich, wenn die Onboard-Firmware der GPU standardmäßig nicht korrekt durchgereicht wird und Probleme wie schwarze Bildschirme oder der Ausfall beim Booten verursacht. Das manuelle Einfügen von ROM ist ein letzter Ausweg nach dem Versuch von BIOS- und VM-Konfigurationseinstellungen.
+
+Um ein ROM einzuspeisen:
+
+1. **GPU-ROM herunterladen:**
+   - Besuchen Sie die [TechPowerUp VGA BIOS-Datenbank](https://www.techpowerup.com/vgabios/).
+   - Suchen Sie Ihr GPU-Modell und laden Sie die korrekte ROM-Datei herunter.
+   - Speichern Sie das ROM in Ihrem Unraid-`isos` oder `domains`-Freigabe.
+
+2. **Bearbeiten Sie das %%VM|vm%%-XML:**
+   - Stoppen Sie die %%VM|vm%% und öffnen Sie deren XML-Konfiguration (**XML bearbeiten** aus dem %%VM|vm%%-Kontextmenü).
+   - Lokalisieren Sie den `<hostdev>`-Block der GPU und fügen Sie das `<rom>` Tag hinzu:
+
+     ```xml
+
+     <hostdev mode='subsystem' type='pci' managed='yes'>
+       <driver name='vfio'/>
+       <source>
+         <address domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
+       </source>
+       <rom file='/mnt/user/isos/gpu_roms/your_gpu.rom'/> <!-- Update path -->
+       <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
+     </hostdev>
+     ```
+
+3. **Speichern und testen:** Klicken Sie auf **Aktualisieren** und starten Sie die %%VM|vm%%.
+
+---
+
+## Häufige Probleme
+
+Dieser Abschnitt behandelt fortgeschrittene Themen und Lösungen für häufige Probleme bei der Verwaltung von %%VMs|vm%% auf Unraid. Erweitern Sie die folgenden Abschnitte für Schritt-für-Schritt-Anleitungen und Tipps zur Fehlerbehebung.
+
+### Einen vDisk erweitern {#expand-a-vdisk}
+
+<details>
+  <summary><strong>Klicken zum Erweitern/Reduzieren</strong></summary>
+
+  Wenn Ihre %%VM|vm%% wenig Speicherplatz hat, können Sie die Größe ihres %%vDisk|vdisk%% direkt über das %%WebGUI|web-gui%% erhöhen.
+
+  Um eine %%vDisk|vdisk%% zu erweitern:
+
+  1. Wechseln Sie zur Registerkarte **VMs** im %%WebGUI|web-gui%%.
+  2. Stellen Sie sicher, dass die %%VM|vm%% gestoppt ist.
+  3. Klicken Sie auf den Namen der VM, um deren Details zu erweitern.
+  4. Suchen Sie die %%vDisk|vdisk%%, die Sie erweitern möchten. Klicken Sie auf den Wert im Feld **Kapazität**, um ihn bearbeitbar zu machen.
+  5. Geben Sie die neue gewünschte Größe ein (z.B. `100G` für 100 Gigabyte) und drücken Sie **Enter**.
+  6. Die neue Kapazität ist nun festgelegt.
+
+  :::note
+
+  Sie können eine %%vDisk|vdisk%% nicht über das Unraid GUI verkleinern; es wird nur eine Erweiterung unterstützt.
+
+  :::
+
+  <h4>Die Partition in Ihrem Gast-Betriebssystem erweitern</h4>
+
+  Nach dem Ändern der Größe der %%vDisk|vdisk%% starten Sie Ihre %%VM|vm%%. Sie müssen die Partition im Gastbetriebssystem erweitern, um den neuen Speicherplatz zu nutzen:
+
+  - **Windows:** Verwenden Sie das eingebaute Festplattenverwaltungstool, um Ihre Partition zu erweitern.
+
+  - **Linux (LVM):** Verwenden Sie Werkzeuge wie `fdisk`, `pvresize`, `lvextend` und `resize2fs`, um Partitionen und logische Volumes zu erweitern.
+
+    **Beispiel:**
+
+    ```bash
+    sudo fdisk /dev/vda
+    sudo pvresize /dev/vda3
+    sudo lvextend -l +100%FREE /dev/mapper/ubuntu--vg-ubuntu--lv
+    sudo resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv
+    ```
+
+    Passen Sie die Gerätenamen bei Bedarf an Ihre Konfiguration an.
+
+  :::tip
+
+  Sichern Sie immer Ihre %%VM|vm%%, bevor Sie Änderungen an der Festplatte vornehmen.
+
+  :::
+</details>
+
+### Steckenbleiben in der UEFI-Shell
+
+<details>
+  <summary><strong>Klicken zum Erweitern/Reduzieren</strong></summary>
+
+  Wenn Ihre %%VM|vm%% zu einer %%UEFI|uefi%%-Shell statt zu Ihrem Betriebssystem startet, können Sie den Bootprozess manuell starten:
+
+  Geben Sie am %%UEFI|uefi%%-Shell-Befehlsprompt ein:
+
+  ```bash
+  fs0:
+  cd efi/boot
+  bootx64.efi
+  ```
+
+  Die %%VM|vm%% sollte nun in Ihr Betriebssystem booten.
+
+  :::tip
+
+  Wenn dies häufig auftritt, überprüfen Sie die Boot-Reihenfolge Ihrer VM und stellen Sie sicher, dass die richtige %%vDisk|vdisk%% oder ISO als primäres Boot-Gerät in den VM-Einstellungen festgelegt ist.
+
+  :::
+</details>
+
+### Schwarzer Bildschirm nach VM-Start
+
+<details>
+  <summary><strong>Klicken zum Erweitern/Reduzieren</strong></summary>
+
+  Wenn Ihre %%VM|vm%% startet, aber das Display leer bleibt:
+
+  1. **BIOS-Einstellungen überprüfen:**
+     - Primäre Grafik auf integrierte GPU (iGPU) setzen, nicht auf die Passthrough-GPU.
+     - Aktualisieren Sie das Motherboard- und GPU-BIOS auf die neuesten Versionen.
+
+  2. **%%VM|vm%%-Einstellungen anpassen:**
+     - Switch from %%SeaBIOS|seabios%% to %%OVMF|ovmf%% (%%UEFI|uefi%%) in %%VM|vm%% settings.
+     - Ändern Sie den **Maschinentyp** von i440fx auf Q35.
+
+  3. **Manuelle ROM-Injektion (letztes Mittel):** [GPU-ROM manuell injizieren](#manual-rom-injection).
+</details>
+
+### Fehler: "IOMMU für Behälter konnte nicht eingestellt werden: Operation nicht erlaubt"
+
+<details>
+  <summary><strong>Klicken zum Erweitern/Reduzieren</strong></summary>
+
+  Dieser Fehler weist typischerweise auf %%IOMMU|iommu%%-Gruppenkonflikte oder fehlende Interrupt-Remapping hin:
+
+  1. **PCIe ACS-Override aktivieren:**
+     - Gehen Sie zu ***Einstellungen → VM-Manager***.
+     - Setzen Sie **PCIe ACS Override** auf *Downstream* oder *Beides*.
+     - Unraid neu starten.
+
+  2. **Unsichere Interrupts zulassen (fortgeschritten):**
+     - Bearbeiten Sie `syslinux.cfg` auf Ihrem Unraid-Flash-Laufwerk:
+
+       ```bash
+       append vfio_iommu_type1.allow_unsafe_interrupts=1 initrd=/bzroot
+       ```
+
+     - Verwenden Sie dies nur, wenn Sie Ihren %%VM|vm%%-Gästen voll vertrauen.
+
+  :::note
+
+  Für detaillierte Erläuterungen zu %%IOMMU|iommu%%-Gruppen empfehlen wir Alex Williamsons [Blog](http://vfio.blogspot.com/2014/08/iommu-groups-inside-and-out.html) zu besuchen.
+
+  :::
+</details>

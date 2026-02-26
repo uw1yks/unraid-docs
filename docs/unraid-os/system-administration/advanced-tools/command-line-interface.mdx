@@ -1,0 +1,582 @@
+---
+sidebar_position: 1
+sidebar_label: Command line interface
+---
+
+<!-- markdownlint-disable MD041 -->
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import CliCpuInfo from "./partials/command-line-interface/cpu-info.mdx";
+import CliMemoryInfo from "./partials/command-line-interface/memory-info.mdx";
+import CliStorageInfo from "./partials/command-line-interface/storage-info.mdx";
+
+# Command line interface
+
+While most tasks in Unraid can be performed through the %%WebGUI|web-gui%%, certain operations - especially those related to diagnostics, drive management, or scripting - require using the system console or %%SSH|ssh%% terminal. This page offers Unraid-specific command-line tools and examples that can be used without needing extensive Linux knowledge.
+
+:::tip[Device paths]
+
+Many disk-level Unraid operations depend on Linux device names, like `/dev/sdX`. You can find the device identifier for any drive in the **Main** tab of the %%WebGUI|web-gui%%. Look for the three-letter label `sdX` or `nvmeX` next to each disk. Use the appropriate identifier in all commands, replacing `sdX` with your specific disk.
+
+:::
+
+## Accessing the terminal
+
+Unraid includes a built-in web terminal that you can access directly from the %%WebGUI|web-gui%%. Simply use the top-right dropdown menu and select ">\_". This opens a command-line session as the %%root user|root-user%%, giving you full administrative access to your system.
+
+You can also connect to your Unraid server externally using %%SSH|ssh%% (secure shell) with a client like %%PuTTY|putty%%.
+
+:::tip[When should I use the terminal?]
+
+Terminal access is useful for:
+
+- Running diagnostics and command-line tools like `smartctl`, `xfs_repair`, `tail`, or `top`
+- Executing plugin scripts or tools that don't require a user interface
+- Troubleshooting issues related to connectivity, system services, or %%user shares|user-share%%
+
+:::
+
+### Using PuTTY (Windows only)
+
+If you're using Windows, you might prefer %%PuTTY|putty%% for %%SSH|ssh%% access instead of the built-in terminal. It's lightweight, free, and allows you to save sessions for easy access later.
+
+<details>
+  <summary><strong>How to install and use PuTTY</strong> - Click to expand/collapse</summary>
+
+**View drive information:**
+
+```bash
+hdparm -I /dev/sdX
+```
+
+This displays the model, firmware, cache size, and supported features, which helps verify disk type and controller behavior.
+
+</details>
+
+### `smartctl`
+
+This command runs %%SMART|smart%% diagnostics and monitors drive health.
+
+<details>
+  <summary><strong>View smartctl options</strong> - Click to expand/collapse</summary>
+
+**Basic %%SMART|smart%% report:**
+
+```bash
+smartctl -a /dev/sdX
+```
+
+If this command returns an error, try specifying the device type: `smartctl -a -d ata /dev/sdX` (use `-d nvme` for NVMe drives).
+
+**Start %%SMART|smart%% self-tests:**
+
+Short test (takes a few minutes)
+
+```bash
+smartctl -t short /dev/sdX
+```
+
+Extended test (may take hours)
+
+```bash
+smartctl -t long /dev/sdX
+```
+
+**Save %%SMART report|smart-report%% to a file:**
+
+```bash
+smartctl -a /dev/sdX > /boot/smart_report.txt
+```
+
+This saves the report to your Unraid flash drive for later review or sharing on the [forums](https://forums.unraid.net/).
+
+</details>
+
+### `diskspeed.sh`
+
+This script allows for comprehensive surface-level performance testing with visual reports.
+
+<details>
+  <summary><strong>View diskspeed.sh usage</strong> - Click to expand/collapse</summary>
+
+This used to be a script you would download from the Unraid forums. DiskSpeed is available now in a more refined package:
+
+Install DiskSpeed from [Community Applications](../../using-unraid-to/run-docker-containers/community-applications.mdx) (**_Apps tab_**) by searching for "DiskSpeed", or visit the [GitHub repository](https://github.com/jbartlett777/DiskSpeed) for manual installation instructions.
+
+</details>
+
+---
+
+## System monitoring
+
+Use these commands to monitor memory, processes, and system performance when the %%WebGUI|web-gui%% is unavailable or for more detailed diagnostics.
+
+### `top`
+
+This command provides a real-time process and resource monitor.
+
+<details>
+  <summary><strong>View top usage</strong> - Click to expand/collapse</summary>
+
+```bash
+top
+```
+
+- Displays CPU and memory usage for each process in real-time.
+- Press `q` to exit.
+- Use arrow keys to scroll, and `k` to terminate processes.
+
+  :::tip
+  Consider using `htop` for a more user-friendly interface with enhanced controls.
+  :::
+
+</details>
+
+### `free`
+
+This command shows memory usage statistics.
+
+<details>
+  <summary><strong>View free usage</strong> - Click to expand/collapse</summary>
+
+```bash
+free -h
+```
+
+This displays RAM usage in a human-readable format. The `-h` flag means sizes will show in KB, MB, or GB instead of bytes.
+
+:::tip[Understand the output]
+
+A low "available" memory reading doesn't necessarily indicate a problem—Linux aggressively caches data for performance.
+
+:::
+
+</details>
+
+### `ps`
+
+Use this command to display running processes with detailed information.
+
+<details>
+  <summary><strong>View ps options</strong> - Click to expand/collapse</summary>
+
+**List all processes with full details:**
+
+```bash
+ps aux
+```
+
+**Sort by memory usage:**
+
+```bash
+ps aux --sort=-%mem | head -20
+```
+
+**Sort by CPU usage:**
+
+```bash
+ps aux --sort=-%cpu | head -20
+```
+
+</details>
+
+---
+
+## Storage utilities
+
+These commands help check disk usage, partition info, and identify storage devices.
+
+### `df`
+
+This command displays filesystem disk space usage.
+
+<details>
+  <summary><strong>View df usage</strong> - Click to expand/collapse</summary>
+
+```bash
+df -h
+```
+
+This command displays the used and available space on all mounted file systems. It’s convenient for checking `/var/log` (which utilizes RAM-based logging) in Unraid. For more information on [system logging](../../troubleshooting/diagnostics/capture-diagnostics-and-logs.mdx).
+
+</details>
+
+### `fdisk`
+
+View disk partition tables and geometry.
+
+<details>
+  <summary><strong>View fdisk usage</strong> - Click to expand/collapse</summary>
+
+```bash
+fdisk -l /dev/sdX
+```
+
+This command displays the partition layout, sizes, and disk geometry. It helps troubleshoot mismatched disk sizes, especially when [replacing disks](../../using-unraid-to/manage-storage/array/replacing-disks-in-array.mdx).
+
+</details>
+
+### `lsblk`
+
+List all block devices in tree format.
+
+<details>
+  <summary><strong>View lsblk usage</strong> - Click to expand/collapse</summary>
+
+```bash
+lsblk
+```
+
+This command displays all storage devices, along with their mount points, in a straightforward tree structure. It’s great for getting an overview of your storage layout.
+
+</details>
+
+### `blockdev -getsz`
+
+Helps determine if a replacement drive has enough space before rebuild.
+
+<details>
+  <summary><strong>View blockdev usage</strong> - Click to expand/collapse</summary>
+
+**Syntax:**
+
+```bash
+blockdev --getsz /dev/sdX
+```
+
+Returns the raw number of 512-byte sectors on a device - handy for confirming that a replacement drive is large enough before rebuilding.
+
+</details>
+
+### `blkid`
+
+Identify filesystem labels.
+
+<details>
+  <summary><strong>View blkid usage</strong> - Click to expand/collapse</summary>
+
+**Syntax:**
+
+```bash
+blkid /dev/sdX1
+```
+
+Outputs the filesystem type and label. Use this instead of the deprecated `vol_id` command when verifying that the Unraid flash is labeled `UNRAID`.
+
+</details>
+
+---
+
+## Network diagnostics
+
+Tools for troubleshooting network connectivity and interface configuration.
+
+### `ss`
+
+Display socket statistics and network connections. This is the modern replacement for `netstat`.
+
+<details>
+  <summary><strong>View ss options</strong> - Click to expand/collapse</summary>
+
+**Show all listening ports:**
+
+```bash
+ss -tuln
+```
+
+- `-t`: TCP sockets
+- `-u`: UDP sockets
+- `-l`: Only show listening sockets
+- `-n`: Show port numbers instead of service names
+
+  **Show established connections:**
+
+  ```bash
+  ss -tup
+  ```
+
+  This command shows active connections along with process information.
+
+</details>
+
+### `ip`
+
+Configure and display network interface information. This is the modern replacement for `ifconfig`.
+
+<details>
+  <summary><strong>View ip options</strong> - Click to expand/collapse</summary>
+
+**Show all network interfaces:**
+
+```bash
+ip addr show
+```
+
+**Show network interfaces with colors:**
+
+```bash
+ip -c addr show
+```
+
+**Show routing table:**
+
+```bash
+ip route show
+```
+
+</details>
+
+### `ping`
+
+Test network connectivity.
+
+<details>
+  <summary><strong>View ping usage</strong> - Click to expand/collapse</summary>
+
+**Test connectivity by sending a limited number of packets:**
+
+```bash
+ping -c 4 google.com
+```
+
+This command sends four packets to the destination and stops, making it suitable for basic connectivity testing without continuous output.
+
+</details>
+
+### `ethtool`
+
+Handy tool for querying and adjusting network interface card (NIC) parameters, such as link speed, offload features, and statistics.
+
+<details>
+  <summary><strong>View ethtool usage</strong> - Click to expand/collapse</summary>
+
+**Basic driver and firmware info:**
+
+Use this command to get information about the driver and firmware for your network interface:
+
+```bash
+ethtool -i eth0
+```
+
+**Show current link speed and settings:**
+
+To check the current link speed and settings of your interface, run:
+
+```bash
+ethtool eth0
+```
+
+**Display extended interface statistics:**
+
+For extended statistics related to the interface, use the following command:
+
+```bash
+ethtool -S eth0
+```
+
+These commands can help you confirm the negotiation speeds for gigabit, 2.5 GbE, or 10 GbE connections, diagnose issues with cables, or identify dropped packets that might arise from offload mismatches.
+
+</details>
+
+---
+
+## System information
+
+Get detailed information about hardware, kernel, and overall system configuration.
+
+<Tabs>
+  <TabItem value="cpu" label="CPU info">
+    <CliCpuInfo />
+  </TabItem>
+
+<TabItem value="memory" label="Memory info">
+  <CliMemoryInfo />
+</TabItem>
+
+  <TabItem value="storage" label="Storage info">
+    <CliStorageInfo />
+  </TabItem>
+</Tabs>
+
+---
+
+## System maintenance
+
+Commands for system shutdown, log monitoring, and service management.
+
+### `tail`
+
+Monitor log files in real-time.
+
+<details>
+  <summary><strong>View tail usage</strong> - Click to expand/collapse</summary>
+
+```bash
+tail -f /var/log/syslog
+```
+
+This command shows live updates from the system log. To exit, use `Ctrl+C`.
+
+**Show a specific number of lines:**
+
+```bash
+tail -n 50 /var/log/syslog
+```
+
+</details>
+
+### `powerdown`
+
+Safely shut down the system.
+
+<details>
+  <summary><strong>View powerdown usage</strong> - Click to expand/collapse</summary>
+
+```bash
+powerdown
+```
+
+This command utilizes Unraid's built-in shutdown process to stop the %%array|array%% and power down the system safely. It's preferred over manual shutdown methods.
+
+</details>
+
+---
+
+## File transfer operations
+
+These methods help you transfer files from external network shares (Windows or Linux SMB/CIFS shares) to your Unraid server using command-line tools and built-in utilities.
+
+### Using Midnight Commander (built-in)
+
+Unraid includes **Midnight Commander** (`mc`), a text-based, dual-pane file manager accessible through the web terminal.
+
+1. Open the web terminal. You can find this option in the top-right menu of the Unraid %%WebGUI|web-gui%%.
+2. Launch Midnight Commander:
+
+   ```bash
+   mc
+   ```
+
+   This interface offers drag-and-drop navigation between local shares and mounted network paths.
+
+3. Mount a network share (if it's not already mounted):
+
+   ```bash
+   # Create a temporary mount point
+   mkdir /work
+   ```
+
+   ```bash
+   # 1) Interactive prompt (recommended for one-off mounts)
+   mount -t cifs //workstation/share /work -o username=youruser,iocharset=utf8
+   # You will be prompted for the password interactively.
+   ```
+
+   ```bash
+   # 2) Use a credentials file (recommended for scripts/automation)
+   # Create /root/.cifscredentials with the following content:
+   #   username=youruser
+   #   password=yourpassword
+   # Then protect the file and mount using:
+   chmod 600 /root/.cifscredentials
+   mount -t cifs //workstation/share /work -o credentials=/root/.cifscredentials,iocharset=utf8
+   ```
+
+   - Replace `workstation`, `share`, and `youruser` with the appropriate values.
+   - The `iocharset=utf8` option helps maintain international filenames.
+
+   **Security note:** Do not pass passwords on the command line (e.g. `password=...`).
+   Command arguments can be recorded in shell history and are visible to other local
+   users via process listings; prefer interactive prompts or a credentials file
+   protected with `chmod 600`.
+
+4. Use the MC panes to transfer files between `/work` (the network share) and any `/mnt/user/` or `/mnt/diskX` share.
+5. Clean up afterward:
+
+   ```bash
+   umount /work
+   rmdir /work
+   ```
+
+Midnight Commander runs entirely within the built-in system, requiring no additional installation. It's suitable for most transfer needs, including those involving Unicode filenames, and it preserves file attributes when both source and destination support them.
+
+### Using Krusader
+
+If you prefer a graphical user interface, you can use Docker containers like [Krusader](https://unraid.net/community/apps?q=krusader#r:~:text=batch%20renaming%2C%20etc.-,Krusader,-Productivity%2C%20Tools) as a third-party solution.
+
+1. Install Krusader:
+   - Navigate to the **Apps** tab (Community Applications).
+   - Search for and install the **Krusader** Docker container.
+2. Start the container and access its WebUI from the **Docker** tab.
+3. Connect to remote shares within Krusader, and use drag-and-drop or copy-paste to transfer files between the network share and your Unraid %%array|array%%.
+
+:::info
+
+Other popular file manager containers include [**Double Commander**](https://unraid.net/community/apps?q=double+commander#r:~:text=of%201%20App-,doublecommander,-Tools%20/%20Utilities%2C) and [**CloudCommander**](https://unraid.net/community/apps?q=cloudcommander#r:~:text=of%201%20App-,CloudCommander,-Tools%20/%20Utilities%2C), both available through Community Applications.
+
+:::
+
+### Command-line methods
+
+For advanced users or those using automation, you can also utilize command-line transfer methods.
+
+<details>
+  <summary><strong>View command-line transfer instructions</strong> - Click to expand/collapse</summary>
+
+1. Open the terminal (Web Terminal or %%SSH|ssh%% as `root`).
+
+1. Create and mount a network share:
+
+```bash
+mkdir /work
+```
+
+```bash
+# 1) Interactive prompt (recommended for one-off mounts)
+mount -t cifs //workstation/share /work -o username=youruser,iocharset=utf8
+# You will be prompted for the password interactively.
+```
+
+```bash
+# 2) Use a credentials file (recommended for scripts/automation)
+# Create /root/.cifscredentials with the following content:
+#   username=youruser
+#   password=yourpassword
+# Then protect the file and mount using:
+chmod 600 /root/.cifscredentials
+mount -t cifs //workstation/share /work -o credentials=/root/.cifscredentials,iocharset=utf8
+```
+
+**Security note:** Do not pass passwords on the command line. Use an
+interactive prompt or a credentials file with strict permissions instead.
+
+1. Copy files:
+   - You can use `cp`:
+
+     ```bash
+     cp -r /work/* /mnt/disk1
+     ```
+
+   - Or, use `rsync` for detailed progress:
+
+     ```bash
+     rsync -av --progress /work/ /mnt/disk1/
+     ```
+
+1. Unmount and remove the temporary directory:
+
+   ```bash
+   umount /work
+   rmdir /work
+   ```
+
+</details>
+
+:::caution
+
+When transferring files with special or international characters, always mount the share with the `iocharset=utf8` option. Failing to do so may result in incorrect filenames or unreadable files on other platforms.
+
+Also, if you copy files as `root` via terminal, they may have restrictive permissions. If this occurs, use the **New Permissions** tool from the **Tools** menu in the %%WebGUI|web-gui%% or the **Docker Safe New Perms** if you're dealing with Docker-involved shares to reset permissions, ensuring all users have network access.
+
+:::

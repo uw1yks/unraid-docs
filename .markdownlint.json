@@ -1,0 +1,19 @@
+{
+  "MD033": {
+    "allowed_elements": [
+      "details",
+      "summary",
+      "Tabs",
+      "TabItem",
+      "CliCpuInfo",
+      "CliMemoryInfo",
+      "CliStorageInfo",
+      "a",
+      "br",
+      "strong",
+      "div",
+      "h3"
+    ]
+  },
+  "MD013": false
+}
